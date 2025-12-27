@@ -1,0 +1,48 @@
+﻿<Window x:Class="MultiStreamVlc.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        Title="Multi Stream VLC" Height="800" Width="1200"
+        Background="#111">
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8">
+            <Button Content="Play All" Width="100" Margin="0,0,8,0" Click="PlayAll_Click"/>
+            <Button Content="Stop All" Width="100" Margin="0,0,8,0" Click="StopAll_Click"/>
+            <Button Content="Mute All" Width="100" Margin="0,0,8,0" Click="MuteAll_Click"/>
+            <Button Content="Unmute All" Width="100" Margin="0,0,8,0" Click="UnmuteAll_Click"/>
+        </StackPanel>
+
+        <Grid Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0" Margin="6" CornerRadius="8" Background="#222">
+                <vlc:VideoView x:Name="V1" />
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
+                <vlc:VideoView x:Name="V2" />
+            </Border>
+            <Border Grid.Row="0" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
+                <vlc:VideoView x:Name="V3" />
+            </Border>
+
+            <Border Grid.Row="1" Grid.Column="0" Margin="6" CornerRadius="8" Background="#222">
+                <vlc:VideoView x:Name="V4" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
+                <vlc:VideoView x:Name="V5" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
+                <vlc:VideoView x:Name="V6" />
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>
