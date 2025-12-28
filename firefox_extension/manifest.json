@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "M3U8 Sniffer",
+    "version": "0.1",
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "<all_urls>",
+        "activeTab",
+        "tabs",
+        "contextMenus",
+        "clipboardWrite",
+        "storage"
+    ],
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    }
+}
