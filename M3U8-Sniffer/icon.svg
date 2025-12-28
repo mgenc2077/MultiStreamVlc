@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Transparent background -->
+  <rect width="128" height="128" fill="none"></rect>
+
+  <!-- Group centered -->
+  <g transform="translate(64 64)">
+    <!-- M3 (slightly higher) -->
+    <text x="0" y="-6" text-anchor="middle" dominant-baseline="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-weight="800" font-size="56" fill="#1e66ff" stroke="#000000" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">M3</text>
+
+    <!-- U8 (slightly lower) -->
+    <text x="0" y="28" text-anchor="middle" dominant-baseline="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-weight="800" font-size="56" fill="#1e66ff" stroke="#000000" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">U8</text>
+  </g>
+</svg>

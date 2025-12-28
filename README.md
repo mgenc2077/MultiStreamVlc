@@ -2,7 +2,7 @@
 
 MultiStreamVlc is a simple WPF application that leverages `LibVLCSharp` to display and control multiple video streams (HLS/m3u8) simultaneously in a grid layout. I created this application to watch multiple streams at once during collab streams.
 
-![MultiStreamVlc](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshot.png?raw=true)
+![MultiStreamVlc](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/screenshot.png?raw=true)
 
 ## Features
 
@@ -12,6 +12,15 @@ MultiStreamVlc is a simple WPF application that leverages `LibVLCSharp` to displ
 -   **Global Controls**: Play All, Stop All, and Reconnect All buttons for mass management.
 -   **Dynamic Source**: "Change URL" button allows you to update the stream URL for any tile on the fly.
 -   **Reliable Backend**: Built on `LibVLCSharp` and `VideoLAN.LibVLC.Windows` for robust playback support.
+
+## M3U8 Sniffer
+
+M3U8 Sniffer is a Firefox extension that allows you to capture .m3u8 URLs from a right click button or keyboard shortcut (Ctrl+Shift+L) and shows history in a toolbar popup. ([Link to Firefox Addon Marketplace](https://addons.mozilla.org/en-US/firefox/addon/m3u8-sniffer/))
+
+![M3U8 Sniffer Right Click](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/m3u8_rightClick.png?raw=true)
+
+![M3U8 Sniffer History](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/m3u8_history.png?raw=true)
+
 
 ## Prerequisites
 
