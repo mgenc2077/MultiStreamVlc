@@ -2,7 +2,7 @@
 
 MultiStreamVlc is a simple WPF application that leverages `LibVLCSharp` to display and control multiple video streams (HLS/m3u8) simultaneously in a grid layout. I created this application to watch multiple streams at once during collab streams.
 
-![MultiStreamVlc](https://github.com/mgenc2077/MultiStreamVlc/blob/main/MultiStreamVlc.png?raw=true)
+![MultiStreamVlc](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshot.png?raw=true)
 
 ## Features
 
