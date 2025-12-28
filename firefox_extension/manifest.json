@@ -1,20 +1,24 @@
 {
     "manifest_version": 2,
     "name": "M3U8 Sniffer",
-    "version": "0.1",
+    "version": "0.2",
+    "description": "Captures .m3u8 URLs and shows history in a toolbar popup.",
     "permissions": [
         "webRequest",
-        "webRequestBlocking",
         "<all_urls>",
-        "activeTab",
         "tabs",
-        "contextMenus",
+        "activeTab",
+        "storage",
         "clipboardWrite",
-        "storage"
+        "contextMenus"
     ],
     "background": {
         "scripts": [
             "background.js"
         ]
+    },
+    "browser_action": {
+        "default_title": "M3U8 Sniffer",
+        "default_popup": "popup.html"
     }
 }
