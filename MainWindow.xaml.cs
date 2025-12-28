@@ -88,6 +88,25 @@ namespace MultiStreamVlc
             PlayIndex(i);
         }
 
+        private void ChangeUrlOne_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out var idx))
+            {
+                if (idx < 0 || idx >= _urls.Length) return;
+
+                var dlg = new ChangeUrlDialog(idx, _urls[idx]) { Owner = this };
+                if (dlg.ShowDialog() == true)
+                {
+                    if (dlg.SelectedIndex < 0 || dlg.SelectedIndex >= _urls.Length) return;
+                    if (string.IsNullOrWhiteSpace(dlg.EnteredUrl)) return;
+
+                    _urls[dlg.SelectedIndex] = dlg.EnteredUrl;
+                    ReconnectIndex(dlg.SelectedIndex);
+                }
+            }
+        }
+
+
         private void StopAll() { foreach (var p in _players) p.Stop(); }
         private void MuteAll(bool mute) { foreach (var p in _players) p.Mute = mute; }
 
