@@ -125,3 +125,44 @@ browser.runtime.onMessage.addListener(async (msg) => {
         return { ok: true };
     }
 });
+
+// Keyboard shortcut
+browser.commands.onCommand.addListener(async (command) => {
+    if (command !== "m3u8-save-copy") return;
+
+    const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+    const tab = tabs[0];
+    if (!tab?.id) return;
+
+    const last = lastSeenByTab.get(tab.id);
+    if (!last?.url) return;
+
+    // Save to history
+    const title = tab.title || `Tab ${tab.id}`;
+    const h = ensureHistory(tab.id, title);
+
+    if (!h.items.some(x => x.url === last.url)) {
+        const label = `${title} — #${h.items.length + 1}`;
+        h.items.unshift({ label, url: last.url, ts: Date.now() });
+    }
+    h.lastUpdated = Date.now();
+
+    // Copy to clipboard
+    await browser.tabs.executeScript(tab.id, {
+        code: `
+      (async () => {
+        const url = ${JSON.stringify(last.url)};
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+      })();
+    `
+    });
+});

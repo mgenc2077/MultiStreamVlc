@@ -20,5 +20,13 @@
     "browser_action": {
         "default_title": "M3U8 Sniffer",
         "default_popup": "popup.html"
+    },
+    "commands": {
+        "m3u8-save-copy": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+L"
+            },
+            "description": "Save and copy last .m3u8"
+        }
     }
 }
