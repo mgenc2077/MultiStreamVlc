@@ -134,11 +134,7 @@ namespace MultiStreamVlc
                 var dlg = new ChangeUrlDialog(idx, _urls[idx]) { Owner = this };
                 if (dlg.ShowDialog() == true)
                 {
-                    if (dlg.SelectedIndex < 0 || dlg.SelectedIndex >= _urls.Length) return;
-                    if (string.IsNullOrWhiteSpace(dlg.EnteredUrl)) return;
-
-                    _urls[dlg.SelectedIndex] = dlg.EnteredUrl;
-                    ReconnectIndex(dlg.SelectedIndex);
+                    TrySetUrl(dlg.SelectedIndex, dlg.EnteredUrl);
                 }
             }
         }
@@ -150,10 +146,7 @@ namespace MultiStreamVlc
                 if (idx < 0 || idx >= _urls.Length) return;
 
                 var url = Clipboard.GetText();
-                if (string.IsNullOrWhiteSpace(url)) return;
-
-                _urls[idx] = url;
-                ReconnectIndex(idx);
+                TrySetUrl(idx, url);
             }
         }
 
@@ -208,12 +201,65 @@ namespace MultiStreamVlc
 
             if (dlg.ShowDialog() == true)
             {
-                if (dlg.SelectedIndex < 0 || dlg.SelectedIndex >= _urls.Length) return;
-                if (string.IsNullOrWhiteSpace(dlg.EnteredUrl)) return;
-
-                _urls[dlg.SelectedIndex] = dlg.EnteredUrl;
-                ReconnectIndex(dlg.SelectedIndex);
+                TrySetUrl(dlg.SelectedIndex, dlg.EnteredUrl);
             }
+        }
+
+        private bool IsValidUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return false;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) return false;
+
+            // 1. Check Scheme
+            var validSchemes = new[] { "http", "https", "rtsp", "rtmp", "udp", "file" };
+            bool schemeOk = false;
+            foreach (var s in validSchemes)
+            {
+                if (s.Equals(uri.Scheme, StringComparison.OrdinalIgnoreCase))
+                {
+                    schemeOk = true;
+                    break;
+                }
+            }
+            if (!schemeOk) return false;
+
+            // 2. Check Extension (strict mode)
+            var validExts = new[] { ".m3u8", ".mp4", ".mkv", ".ts", ".flv", ".avi", ".mov" };
+            var ext = System.IO.Path.GetExtension(uri.AbsolutePath);
+            bool extOk = false;
+            foreach (var e in validExts)
+            {
+                if (e.Equals(ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    extOk = true;
+                    break;
+                }
+            }
+            return extOk;
+        }
+
+        private void ShowUrlError(string invalidValue)
+        {
+            try { System.Media.SystemSounds.Hand.Play(); } catch { }
+            MessageBox.Show(this, 
+                $"Unsupported Value: {invalidValue}\n\nMust start with http/rtsp/etc. and end with .m3u8/.mp4/etc.", 
+                "Unsupported Value", 
+                MessageBoxButton.OK, 
+                MessageBoxImage.Warning);
+        }
+
+        private void TrySetUrl(int index, string url)
+        {
+            if (index < 0 || index >= _urls.Length) return;
+
+            if (!IsValidUrl(url))
+            {
+                ShowUrlError(url);
+                return;
+            }
+
+            _urls[index] = url;
+            ReconnectIndex(index);
         }
     }
 }
