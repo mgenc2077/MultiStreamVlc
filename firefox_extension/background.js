@@ -1,7 +1,3 @@
-// We keep:
-// - lastSeenByTab: latest captured .m3u8 per tab (NOT shown as history until you manually add)
-// - historyByTab: saved entries (shown in popup)
-
 const lastSeenByTab = new Map();   // tabId -> { url, ts }
 const historyByTab = new Map();    // tabId -> { title, items: [{label, url, ts}], lastUpdated }
 
@@ -18,19 +14,10 @@ function looksLikeM3U8(url) {
     }
 }
 
-async function getTabTitle(tabId) {
-    try {
-        const tab = await browser.tabs.get(tabId);
-        return tab.title || `Tab ${tabId}`;
-    } catch {
-        return `Tab ${tabId}`;
-    }
-}
-
 function ensureHistory(tabId, title) {
     let entry = historyByTab.get(tabId);
     if (!entry) {
-        entry = { title, items: [], lastUpdated: Date.now() };
+        entry = { title: title || `Tab ${tabId}`, items: [], lastUpdated: Date.now() };
         historyByTab.set(tabId, entry);
     } else {
         entry.title = title || entry.title || `Tab ${tabId}`;
@@ -38,7 +25,7 @@ function ensureHistory(tabId, title) {
     return entry;
 }
 
-// Capture network requests, but ONLY store the latest one per tab
+// Capture network requests, but only keep the latest one per tab
 browser.webRequest.onBeforeRequest.addListener(
     (details) => {
         if (details.tabId >= 0 && looksLikeM3U8(details.url)) {
@@ -48,25 +35,19 @@ browser.webRequest.onBeforeRequest.addListener(
     { urls: ["<all_urls>"] }
 );
 
-// Context menu items
+// Single context menu item: save + copy
 browser.contextMenus.create({
-    id: "m3u8-add-last",
-    title: "Add last .m3u8 to M3U8 Sniffer history",
-    contexts: ["all"]
-});
-
-browser.contextMenus.create({
-    id: "m3u8-copy-last",
-    title: "Copy last .m3u8 (no save)",
+    id: "m3u8-save-copy-last",
+    title: "Save + copy last .m3u8",
     contexts: ["all"]
 });
 
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
+    if (info.menuItemId !== "m3u8-save-copy-last") return;
     if (!tab?.id || tab.id < 0) return;
 
     const last = lastSeenByTab.get(tab.id);
     if (!last?.url) {
-        // Optional: notify user
         await browser.notifications?.create({
             type: "basic",
             iconUrl: browser.runtime.getURL("icon.png"),
@@ -76,48 +57,38 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
         return;
     }
 
-    if (info.menuItemId === "m3u8-copy-last") {
-        // Copying from background is unreliable; do it via executeScript on the tab
-        await browser.tabs.executeScript(tab.id, {
-            code: `
-        (async () => {
-          const url = ${JSON.stringify(last.url)};
-          try {
-            await navigator.clipboard.writeText(url);
-          } catch (e) {
-            const ta = document.createElement('textarea');
-            ta.value = url;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            ta.remove();
-          }
-        })();
-      `
-        });
-        return;
-    }
+    // 1) Save to history (label based on tab title, not URL)
+    const title = tab.title || `Tab ${tab.id}`;
+    const h = ensureHistory(tab.id, title);
 
-    if (info.menuItemId === "m3u8-add-last") {
-        const title = tab.title || await getTabTitle(tab.id);
-        const h = ensureHistory(tab.id, title);
-
-        // Create a readable label that does NOT include URL
+    // Dedup by URL (optional but usually nice)
+    const alreadySaved = h.items.some(x => x.url === last.url);
+    if (!alreadySaved) {
         const n = h.items.length + 1;
         const label = `${title} — #${n}`;
-
-        // Dedup by URL (optional): if already saved, ignore
-        if (h.items.some(x => x.url === last.url)) {
-            // Still bump lastUpdated
-            h.lastUpdated = Date.now();
-            return;
-        }
-
         h.items.unshift({ label, url: last.url, ts: Date.now() });
         if (h.items.length > MAX_ITEMS_PER_TAB) h.items.length = MAX_ITEMS_PER_TAB;
-
-        h.lastUpdated = Date.now();
     }
+    h.lastUpdated = Date.now();
+
+    // 2) Copy to clipboard (do it in page context for reliability)
+    await browser.tabs.executeScript(tab.id, {
+        code: `
+      (async () => {
+        const url = ${JSON.stringify(last.url)};
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+      })();
+    `
+    });
 });
 
 // Cleanup on tab close
@@ -126,7 +97,7 @@ browser.tabs.onRemoved.addListener((tabId) => {
     historyByTab.delete(tabId);
 });
 
-// Keep titles updated in history
+// Keep titles updated in history when they change
 browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
     if (changeInfo.title) {
         const h = historyByTab.get(tabId);
@@ -153,6 +124,4 @@ browser.runtime.onMessage.addListener(async (msg) => {
         historyByTab.clear();
         return { ok: true };
     }
-
-    return;
 });
