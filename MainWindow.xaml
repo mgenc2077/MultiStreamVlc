@@ -6,13 +6,18 @@
         Background="#111">
 
     <DockPanel>
+        <!-- Top toolbar -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8">
             <Button Content="Play All" Width="100" Margin="0,0,8,0" Click="PlayAll_Click"/>
             <Button Content="Stop All" Width="100" Margin="0,0,8,0" Click="StopAll_Click"/>
+            <Button Content="Reconnect All" Width="120" Margin="0,0,8,0" Click="ReconnectAll_Click"/>
+            <Button Content="Change URL..." Width="120" Margin="0,0,8,0" Click="ChangeUrl_Click"/>
+            <Separator Margin="8,0"/>
             <Button Content="Mute All" Width="100" Margin="0,0,8,0" Click="MuteAll_Click"/>
             <Button Content="Unmute All" Width="100" Margin="0,0,8,0" Click="UnmuteAll_Click"/>
         </StackPanel>
 
+        <!-- 2x3 grid -->
         <Grid Margin="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -24,24 +29,88 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <!-- Tile 1 -->
             <Border Grid.Row="0" Grid.Column="0" Margin="6" CornerRadius="8" Background="#222">
-                <vlc:VideoView x:Name="V1" />
-            </Border>
-            <Border Grid.Row="0" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
-                <vlc:VideoView x:Name="V2" />
-            </Border>
-            <Border Grid.Row="0" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
-                <vlc:VideoView x:Name="V3" />
+                <Grid>
+                    <vlc:VideoView x:Name="V1"/>
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
+                            CornerRadius="6" Background="#AA000000" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="1" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Content="Reconnect" Padding="8,2" Tag="0" Click="ReconnectOne_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
 
+            <!-- Tile 2 -->
+            <Border Grid.Row="0" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
+                <Grid>
+                    <vlc:VideoView x:Name="V2"/>
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
+                            CornerRadius="6" Background="#AA000000" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="2" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Content="Reconnect" Padding="8,2" Tag="1" Click="ReconnectOne_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Tile 3 -->
+            <Border Grid.Row="0" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
+                <Grid>
+                    <vlc:VideoView x:Name="V3"/>
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
+                            CornerRadius="6" Background="#AA000000" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="3" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Content="Reconnect" Padding="8,2" Tag="2" Click="ReconnectOne_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Tile 4 -->
             <Border Grid.Row="1" Grid.Column="0" Margin="6" CornerRadius="8" Background="#222">
-                <vlc:VideoView x:Name="V4" />
+                <Grid>
+                    <vlc:VideoView x:Name="V4"/>
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
+                            CornerRadius="6" Background="#AA000000" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="4" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Content="Reconnect" Padding="8,2" Tag="3" Click="ReconnectOne_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
+
+            <!-- Tile 5 -->
             <Border Grid.Row="1" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
-                <vlc:VideoView x:Name="V5" />
+                <Grid>
+                    <vlc:VideoView x:Name="V5"/>
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
+                            CornerRadius="6" Background="#AA000000" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="5" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Content="Reconnect" Padding="8,2" Tag="4" Click="ReconnectOne_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
+
+            <!-- Tile 6 -->
             <Border Grid.Row="1" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
-                <vlc:VideoView x:Name="V6" />
+                <Grid>
+                    <vlc:VideoView x:Name="V6"/>
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
+                            CornerRadius="6" Background="#AA000000" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="6" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Content="Reconnect" Padding="8,2" Tag="5" Click="ReconnectOne_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
         </Grid>
     </DockPanel>

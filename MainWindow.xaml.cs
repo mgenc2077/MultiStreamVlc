@@ -1,7 +1,5 @@
 ﻿using LibVLCSharp.Shared;
 using System;
-using System.IO;
-using System.Linq;
 using System.Windows;
 
 namespace MultiStreamVlc
@@ -14,50 +12,30 @@ namespace MultiStreamVlc
         // Put your m3u8 URLs here (6 of them)
         private readonly string[] _urls = new[]
         {
-            "https://edge9-sof.live.mmcdn.com/live-edge/amlst:squrlgurl-sd-1bb81c5d4c793f70b9878f9880467171af6d4f594e6ecfb73cc8d286a2fab8ac_trns_h264/chunklist_w489189762_b5128000_t64RlBTOjMwLjA=.m3u8",
-            "https://edge9-sof.live.mmcdn.com/live-edge/amlst:squrlgurl-sd-1bb81c5d4c793f70b9878f9880467171af6d4f594e6ecfb73cc8d286a2fab8ac_trns_h264/chunklist_w489189762_b5128000_t64RlBTOjMwLjA=.m3u8",
-            "https://edge9-sof.live.mmcdn.com/live-edge/amlst:squrlgurl-sd-1bb81c5d4c793f70b9878f9880467171af6d4f594e6ecfb73cc8d286a2fab8ac_trns_h264/chunklist_w489189762_b5128000_t64RlBTOjMwLjA=.m3u8",
-            "https://edge9-sof.live.mmcdn.com/live-edge/amlst:squrlgurl-sd-1bb81c5d4c793f70b9878f9880467171af6d4f594e6ecfb73cc8d286a2fab8ac_trns_h264/chunklist_w489189762_b5128000_t64RlBTOjMwLjA=.m3u8",
-            "https://edge9-sof.live.mmcdn.com/live-edge/amlst:squrlgurl-sd-1bb81c5d4c793f70b9878f9880467171af6d4f594e6ecfb73cc8d286a2fab8ac_trns_h264/chunklist_w489189762_b5128000_t64RlBTOjMwLjA=.m3u8",
-            "https://edge9-sof.live.mmcdn.com/live-edge/amlst:squrlgurl-sd-1bb81c5d4c793f70b9878f9880467171af6d4f594e6ecfb73cc8d286a2fab8ac_trns_h264/chunklist_w489189762_b5128000_t64RlBTOjMwLjA=.m3u8",
+            "https://example.com/stream1.m3u8",
+            "https://example.com/stream2.m3u8",
+            "https://example.com/stream3.m3u8",
+            "https://example.com/stream4.m3u8",
+            "https://example.com/stream5.m3u8",
+            "https://example.com/stream6.m3u8",
         };
 
         public MainWindow()
         {
             InitializeComponent();
 
+            // With VideoLAN.LibVLC.Windows package installed, this is enough:
             Core.Initialize();
 
-            // If VLC is installed normally, libvlc.dll is usually in one of these.
-            // Pick whichever exists on your machine.
-            var candidates = new[]
-            {
-                @"C:\Program Files\VideoLAN\VLC",
-                @"C:\Program Files (x86)\VideoLAN\VLC"
-            };
-
-            var vlcDir = candidates.FirstOrDefault(Directory.Exists);
-            if (vlcDir == null)
-            {
-                MessageBox.Show("VLC not found. Install VLC (64-bit) first, or bundle libVLC with the app.");
-                Close();
-                return;
-            }
-
-            // Tell LibVLCSharp where libvlc is
-            // (Important: libvlc.dll and plugins folder must be there)
-            Environment.SetEnvironmentVariable("VLC_PLUGIN_PATH", Path.Combine(vlcDir, "plugins"));
             _libVlc = new LibVLC(new[]
             {
-                // Helpful stability/perf flags (tweak later):
                 "--quiet",
                 "--no-video-title-show",
                 "--drop-late-frames",
                 "--skip-frames",
-                "--network-caching=1000", // ms; tune for your latency/jitter
+                "--network-caching=1000", // ms; tune later
             });
 
-            // Create 6 players (one per view)
             _players = new[]
             {
                 new MediaPlayer(_libVlc),
@@ -68,7 +46,6 @@ namespace MultiStreamVlc
                 new MediaPlayer(_libVlc),
             };
 
-            // Attach to VideoViews
             V1.MediaPlayer = _players[0];
             V2.MediaPlayer = _players[1];
             V3.MediaPlayer = _players[2];
@@ -82,34 +59,37 @@ namespace MultiStreamVlc
 
         private void PlayAll()
         {
-            if (_libVlc == null) return;
-
             for (int i = 0; i < _players.Length; i++)
-            {
-                var url = _urls[i];
-                if (string.IsNullOrWhiteSpace(url)) continue;
-
-                // Dispose previous media if any by just creating a new Media each time.
-                using var media = new Media(_libVlc, new Uri(url));
-
-                // Optional: if your streams require headers (Referer / Cookie), you can add options here:
-                // media.AddOption(":http-referrer=https://yoursite.example/");
-                // media.AddOption(":http-user-agent=Mozilla/5.0 ...");
-                // media.AddOption(":http-cookie=key=value; key2=value2;");
-
-                _players[i].Play(media);
-            }
+                PlayIndex(i);
         }
 
-        private void StopAll()
+        private void PlayIndex(int i)
         {
-            foreach (var p in _players) p.Stop();
+            if (_libVlc == null) return;
+            if (i < 0 || i >= _players.Length) return;
+
+            var url = _urls[i];
+            if (string.IsNullOrWhiteSpace(url)) return;
+
+            using var media = new Media(_libVlc, new Uri(url));
+
+            // If your stream requires headers/cookies:
+            // media.AddOption(":http-referrer=https://the-site/");
+            // media.AddOption(":http-user-agent=Mozilla/5.0 ...");
+            // media.AddOption(":http-cookie=SESSION=...; other=...");
+
+            _players[i].Play(media);
         }
 
-        private void MuteAll(bool mute)
+        private void ReconnectIndex(int i)
         {
-            foreach (var p in _players) p.Mute = mute;
+            if (i < 0 || i >= _players.Length) return;
+            _players[i].Stop();
+            PlayIndex(i);
         }
+
+        private void StopAll() { foreach (var p in _players) p.Stop(); }
+        private void MuteAll(bool mute) { foreach (var p in _players) p.Mute = mute; }
 
         private void Cleanup()
         {
@@ -121,16 +101,49 @@ namespace MultiStreamVlc
                     p.Dispose();
                 }
                 _players = Array.Empty<MediaPlayer>();
-
                 _libVlc?.Dispose();
                 _libVlc = null;
             }
-            catch { /* ignore */ }
+            catch { }
         }
 
+        // Toolbar buttons
         private void PlayAll_Click(object sender, RoutedEventArgs e) => PlayAll();
         private void StopAll_Click(object sender, RoutedEventArgs e) => StopAll();
+        private void ReconnectAll_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < _players.Length; i++) ReconnectIndex(i);
+        }
         private void MuteAll_Click(object sender, RoutedEventArgs e) => MuteAll(true);
         private void UnmuteAll_Click(object sender, RoutedEventArgs e) => MuteAll(false);
+
+        // Per-tile reconnect buttons (Tag holds index 0..5)
+        private void ReconnectOne_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out var idx))
+            {
+                ReconnectIndex(idx);
+            }
+        }
+
+        // Change URL popup
+        private void ChangeUrl_Click(object sender, RoutedEventArgs e)
+        {
+            // Default to tile 1; you can improve later (e.g., last clicked tile)
+            int currentIndex = 0;
+            var dlg = new ChangeUrlDialog(currentIndex, _urls[currentIndex])
+            {
+                Owner = this
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                if (dlg.SelectedIndex < 0 || dlg.SelectedIndex >= _urls.Length) return;
+                if (string.IsNullOrWhiteSpace(dlg.EnteredUrl)) return;
+
+                _urls[dlg.SelectedIndex] = dlg.EnteredUrl;
+                ReconnectIndex(dlg.SelectedIndex);
+            }
+        }
     }
 }
