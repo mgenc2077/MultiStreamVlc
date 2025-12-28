@@ -39,6 +39,7 @@
                             <TextBlock Text="1" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <Button Content="Reconnect" Padding="8,2" Tag="0" Click="ReconnectOne_Click"/>
                             <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="ChangeUrlOne_Click"/>
+                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="MuteOne_Click"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -54,6 +55,7 @@
                             <TextBlock Text="2" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <Button Content="Reconnect" Padding="8,2" Tag="1" Click="ReconnectOne_Click"/>
                             <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="ChangeUrlOne_Click"/>
+                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="MuteOne_Click"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -69,6 +71,7 @@
                             <TextBlock Text="3" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <Button Content="Reconnect" Padding="8,2" Tag="2" Click="ReconnectOne_Click"/>
                             <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="ChangeUrlOne_Click"/>
+                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="MuteOne_Click"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -84,6 +87,7 @@
                             <TextBlock Text="4" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <Button Content="Reconnect" Padding="8,2" Tag="3" Click="ReconnectOne_Click"/>
                             <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="ChangeUrlOne_Click"/>
+                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="MuteOne_Click"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -99,6 +103,7 @@
                             <TextBlock Text="5" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <Button Content="Reconnect" Padding="8,2" Tag="4" Click="ReconnectOne_Click"/>
                             <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="ChangeUrlOne_Click"/>
+                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="MuteOne_Click"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -114,6 +119,7 @@
                             <TextBlock Text="6" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
                             <Button Content="Reconnect" Padding="8,2" Tag="5" Click="ReconnectOne_Click"/>
                             <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="ChangeUrlOne_Click"/>
+                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="MuteOne_Click"/>
                         </StackPanel>
                     </Border>
                 </Grid>

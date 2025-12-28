@@ -88,6 +88,15 @@ namespace MultiStreamVlc
             PlayIndex(i);
         }
 
+        private void MuteOne_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out var idx))
+            {
+                if (idx < 0 || idx >= _players.Length) return;
+                _players[idx].Mute = !_players[idx].Mute;
+            }
+        }
+
         private void ChangeUrlOne_Click(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out var idx))
