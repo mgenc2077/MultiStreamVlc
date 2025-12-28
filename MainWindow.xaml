@@ -5,20 +5,124 @@
         Title="Multi Stream VLC" Height="800" Width="1200"
         Background="#111">
 
-    <DockPanel>
-        <!-- Top toolbar -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8">
-            <Button Content="Play All" Width="100" Margin="0,0,8,0" Click="PlayAll_Click"/>
-            <Button Content="Stop All" Width="100" Margin="0,0,8,0" Click="StopAll_Click"/>
-            <Button Content="Reconnect All" Width="120" Margin="0,0,8,0" Click="ReconnectAll_Click"/>
-            <Button Content="Change URL..." Width="120" Margin="0,0,8,0" Click="ChangeUrl_Click"/>
-            <Separator Margin="8,0"/>
-            <Button Content="Mute All" Width="100" Margin="0,0,8,0" Click="MuteAll_Click"/>
-            <Button Content="Unmute All" Width="100" Margin="0,0,8,0" Click="UnmuteAll_Click"/>
-        </StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- 2x3 grid -->
-        <Grid Margin="8">
+        <!-- Side panel -->
+        <Border Grid.Column="0" Background="#1a1a1a" Padding="12">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="Streams"
+                           Foreground="White"
+                           FontSize="18"
+                           Margin="0,0,0,12"/>
+
+                <StackPanel>
+                    <!-- Global -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                        <Button Content="Play All" Width="110" Margin="0,0,8,0" Click="PlayAll_Click"/>
+                        <Button Content="Stop All" Width="110" Click="StopAll_Click"/>
+                    </StackPanel>
+
+                    <!-- Rows 1..6 -->
+                    <Border Margin="0,0,0,8" CornerRadius="8" Background="#252525" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Stream 1" Foreground="White" Margin="0,0,0,6"/>
+                            <WrapPanel>
+                                <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="0" Click="PlayOne_Click"/>
+                                <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="0" Click="StopOne_Click"/>
+                                <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="0" Click="ReconnectOne_Click"/>
+                                <Slider Width="100" Minimum="0" Maximum="100" Value="100" 
+                                        VerticalAlignment="Center" Margin="0,0,6,6" 
+                                        Tag="0" ValueChanged="VolumeOne_ValueChanged"/>
+                                <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="ChangeUrlOne_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,0,0,8" CornerRadius="8" Background="#252525" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Stream 2" Foreground="White" Margin="0,0,0,6"/>
+                            <WrapPanel>
+                                <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="1" Click="PlayOne_Click"/>
+                                <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="1" Click="StopOne_Click"/>
+                                <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="1" Click="ReconnectOne_Click"/>
+                                <Slider Width="100" Minimum="0" Maximum="100" Value="100" 
+                                        VerticalAlignment="Center" Margin="0,0,6,6" 
+                                        Tag="1" ValueChanged="VolumeOne_ValueChanged"/>
+                                <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="ChangeUrlOne_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,0,0,8" CornerRadius="8" Background="#252525" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Stream 3" Foreground="White" Margin="0,0,0,6"/>
+                            <WrapPanel>
+                                <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="2" Click="PlayOne_Click"/>
+                                <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="2" Click="StopOne_Click"/>
+                                <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="2" Click="ReconnectOne_Click"/>
+                                <Slider Width="100" Minimum="0" Maximum="100" Value="100" 
+                                        VerticalAlignment="Center" Margin="0,0,6,6" 
+                                        Tag="2" ValueChanged="VolumeOne_ValueChanged"/>
+                                <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="ChangeUrlOne_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,0,0,8" CornerRadius="8" Background="#252525" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Stream 4" Foreground="White" Margin="0,0,0,6"/>
+                            <WrapPanel>
+                                <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="3" Click="PlayOne_Click"/>
+                                <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="3" Click="StopOne_Click"/>
+                                <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="3" Click="ReconnectOne_Click"/>
+                                <Slider Width="100" Minimum="0" Maximum="100" Value="100" 
+                                        VerticalAlignment="Center" Margin="0,0,6,6" 
+                                        Tag="3" ValueChanged="VolumeOne_ValueChanged"/>
+                                <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="ChangeUrlOne_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,0,0,8" CornerRadius="8" Background="#252525" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Stream 5" Foreground="White" Margin="0,0,0,6"/>
+                            <WrapPanel>
+                                <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="4" Click="PlayOne_Click"/>
+                                <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="4" Click="StopOne_Click"/>
+                                <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="4" Click="ReconnectOne_Click"/>
+                                <Slider Width="100" Minimum="0" Maximum="100" Value="100" 
+                                        VerticalAlignment="Center" Margin="0,0,6,6" 
+                                        Tag="4" ValueChanged="VolumeOne_ValueChanged"/>
+                                <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="ChangeUrlOne_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,0,0,8" CornerRadius="8" Background="#252525" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Stream 6" Foreground="White" Margin="0,0,0,6"/>
+                            <WrapPanel>
+                                <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="5" Click="PlayOne_Click"/>
+                                <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="5" Click="StopOne_Click"/>
+                                <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="5" Click="ReconnectOne_Click"/>
+                                <Slider Width="100" Minimum="0" Maximum="100" Value="100" 
+                                        VerticalAlignment="Center" Margin="0,0,6,6" 
+                                        Tag="5" ValueChanged="VolumeOne_ValueChanged"/>
+                                <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="ChangeUrlOne_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Video grid -->
+        <Grid Grid.Column="1" Margin="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -29,101 +133,24 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Tile 1 -->
             <Border Grid.Row="0" Grid.Column="0" Margin="6" CornerRadius="8" Background="#222">
-                <Grid>
-                    <vlc:VideoView x:Name="V1"/>
-                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
-                            CornerRadius="6" Background="#AA000000" Padding="6">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="1" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Content="Reconnect" Padding="8,2" Tag="0" Click="ReconnectOne_Click"/>
-                            <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="ChangeUrlOne_Click"/>
-                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="MuteOne_Click"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <vlc:VideoView x:Name="V1"/>
             </Border>
-
-            <!-- Tile 2 -->
             <Border Grid.Row="0" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
-                <Grid>
-                    <vlc:VideoView x:Name="V2"/>
-                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
-                            CornerRadius="6" Background="#AA000000" Padding="6">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="2" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Content="Reconnect" Padding="8,2" Tag="1" Click="ReconnectOne_Click"/>
-                            <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="ChangeUrlOne_Click"/>
-                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="MuteOne_Click"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <vlc:VideoView x:Name="V2"/>
             </Border>
-
-            <!-- Tile 3 -->
             <Border Grid.Row="0" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
-                <Grid>
-                    <vlc:VideoView x:Name="V3"/>
-                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
-                            CornerRadius="6" Background="#AA000000" Padding="6">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="3" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Content="Reconnect" Padding="8,2" Tag="2" Click="ReconnectOne_Click"/>
-                            <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="ChangeUrlOne_Click"/>
-                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="MuteOne_Click"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <vlc:VideoView x:Name="V3"/>
             </Border>
-
-            <!-- Tile 4 -->
             <Border Grid.Row="1" Grid.Column="0" Margin="6" CornerRadius="8" Background="#222">
-                <Grid>
-                    <vlc:VideoView x:Name="V4"/>
-                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
-                            CornerRadius="6" Background="#AA000000" Padding="6">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="4" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Content="Reconnect" Padding="8,2" Tag="3" Click="ReconnectOne_Click"/>
-                            <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="ChangeUrlOne_Click"/>
-                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="MuteOne_Click"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <vlc:VideoView x:Name="V4"/>
             </Border>
-
-            <!-- Tile 5 -->
             <Border Grid.Row="1" Grid.Column="1" Margin="6" CornerRadius="8" Background="#222">
-                <Grid>
-                    <vlc:VideoView x:Name="V5"/>
-                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
-                            CornerRadius="6" Background="#AA000000" Padding="6">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="5" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Content="Reconnect" Padding="8,2" Tag="4" Click="ReconnectOne_Click"/>
-                            <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="ChangeUrlOne_Click"/>
-                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="MuteOne_Click"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <vlc:VideoView x:Name="V5"/>
             </Border>
-
-            <!-- Tile 6 -->
             <Border Grid.Row="1" Grid.Column="2" Margin="6" CornerRadius="8" Background="#222">
-                <Grid>
-                    <vlc:VideoView x:Name="V6"/>
-                    <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8"
-                            CornerRadius="6" Background="#AA000000" Padding="6">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="6" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Content="Reconnect" Padding="8,2" Tag="5" Click="ReconnectOne_Click"/>
-                            <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="ChangeUrlOne_Click"/>
-                            <Button Content="Mute" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="MuteOne_Click"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <vlc:VideoView x:Name="V6"/>
             </Border>
         </Grid>
-    </DockPanel>
+    </Grid>
 </Window>

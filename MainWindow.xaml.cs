@@ -6,6 +6,8 @@ namespace MultiStreamVlc
 {
     public partial class MainWindow : Window
     {
+
+
         private LibVLC? _libVlc;
         private MediaPlayer[] _players = Array.Empty<MediaPlayer>();
 
@@ -29,11 +31,12 @@ namespace MultiStreamVlc
 
             _libVlc = new LibVLC(new[]
             {
-                "--quiet",
                 "--no-video-title-show",
                 "--drop-late-frames",
                 "--skip-frames",
                 "--network-caching=1000", // ms; tune later
+                "--aout=directsound",
+                "--directx-volume=0.35",
             });
 
             _players = new[]
@@ -88,14 +91,39 @@ namespace MultiStreamVlc
             PlayIndex(i);
         }
 
-        private void MuteOne_Click(object sender, RoutedEventArgs e)
+        private int? GetIndexFromTag(object sender)
         {
-            if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out var idx))
+            if (sender is System.Windows.Controls.Button btn &&
+                int.TryParse(btn.Tag?.ToString(), out var idx))
+                return idx;
+            return null;
+        }
+
+        private void PlayOne_Click(object sender, RoutedEventArgs e)
+        {
+            var idx = GetIndexFromTag(sender);
+            if (idx == null) return;
+            _players[idx.Value].Stop();
+            PlayIndex(idx.Value);
+        }
+
+        private void StopOne_Click(object sender, RoutedEventArgs e)
+        {
+            var idx = GetIndexFromTag(sender);
+            if (idx == null) return;
+            _players[idx.Value].Stop();
+        }
+
+        private void VolumeOne_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sender is System.Windows.Controls.Slider slider && 
+                int.TryParse(slider.Tag?.ToString(), out var idx))
             {
                 if (idx < 0 || idx >= _players.Length) return;
-                _players[idx].Mute = !_players[idx].Mute;
+                _players[idx].Volume = (int)e.NewValue;
             }
         }
+
 
         private void ChangeUrlOne_Click(object sender, RoutedEventArgs e)
         {
@@ -117,7 +145,7 @@ namespace MultiStreamVlc
 
 
         private void StopAll() { foreach (var p in _players) p.Stop(); }
-        private void MuteAll(bool mute) { foreach (var p in _players) p.Mute = mute; }
+        //private void MuteAll(bool mute) { foreach (var p in _players) p.Mute = mute; }
 
         private void Cleanup()
         {
@@ -142,8 +170,8 @@ namespace MultiStreamVlc
         {
             for (int i = 0; i < _players.Length; i++) ReconnectIndex(i);
         }
-        private void MuteAll_Click(object sender, RoutedEventArgs e) => MuteAll(true);
-        private void UnmuteAll_Click(object sender, RoutedEventArgs e) => MuteAll(false);
+        //private void MuteAll_Click(object sender, RoutedEventArgs e) => MuteAll(true);
+        //private void UnmuteAll_Click(object sender, RoutedEventArgs e) => MuteAll(false);
 
         // Per-tile reconnect buttons (Tag holds index 0..5)
         private void ReconnectOne_Click(object sender, RoutedEventArgs e)
