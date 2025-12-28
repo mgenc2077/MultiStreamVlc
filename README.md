@@ -43,7 +43,7 @@ MultiStreamVlc is a simple WPF application that leverages `LibVLCSharp` to displ
 ## Usage
 
 -   **Streams**: By default, the app is configured with placeholder URLs (`https://example.com/streamN.m3u8`).
--   **Change URL**: Click "Change URL" on any tile to set a real HLS/m3u8 stream link.
+-   **Change URL**: Click "Change URL" for a popup to set a real HLS/m3u8 stream link per tile or "Clipboard URL" for a getting the url directly from the clipboard to set a real HLS/m3u8 stream link.
 -   **Volume**: Use the slider on each tile to adjust volume. Slide to the far left (0) to mute.
 -   **Reconnecting**: If a stream stalls or disconnects, click "Reconnect" on its specific panel.
 

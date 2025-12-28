@@ -143,6 +143,20 @@ namespace MultiStreamVlc
             }
         }
 
+        private void ChangeUrlClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out var idx))
+            {
+                if (idx < 0 || idx >= _urls.Length) return;
+
+                var url = Clipboard.GetText();
+                if (string.IsNullOrWhiteSpace(url)) return;
+
+                _urls[idx] = url;
+                ReconnectIndex(idx);
+            }
+        }
+
 
         private void StopAll() { foreach (var p in _players) p.Stop(); }
         //private void MuteAll(bool mute) { foreach (var p in _players) p.Mute = mute; }
