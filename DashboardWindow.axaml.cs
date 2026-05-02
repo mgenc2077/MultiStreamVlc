@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using LibVLCSharp.Shared;
@@ -75,6 +76,16 @@ public partial class DashboardWindow : Window
     {
         entry.Player?.Stop();
         entry.RefreshStatus();
+    }
+
+    private void VolumeSlider_ValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (sender is not Slider slider || slider.Tag is not Guid id) return;
+        var entry = FindById(id);
+        if (entry?.Player != null)
+        {
+            entry.Player.Volume = (int)e.NewValue;
+        }
     }
 
     private void NewStream_Click(object? sender, RoutedEventArgs e)
