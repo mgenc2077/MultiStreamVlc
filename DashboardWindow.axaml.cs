@@ -157,32 +157,33 @@ public partial class DashboardWindow : Window
         win.Show(this);
     }
 
-    private void PinToGrid_Click(object? sender, RoutedEventArgs e)
+    private void GridSelector_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var id = GetIdFromTag(sender);
-        if (id == null) return;
-        var entry = FindById(id.Value);
+        if (sender is not ComboBox cb || cb.Tag is not Guid id) return;
+        var entry = FindById(id);
         if (entry == null) return;
 
-        if (entry.GridSlot.HasValue)
+        var newIndex = cb.SelectedIndex;
+
+        var usedSlots = new HashSet<int>(_streams
+            .Where(s => s.GridSlot.HasValue && s.Id != entry.Id)
+            .Select(s => s.GridSlot!.Value));
+
+        if (newIndex == 0)
         {
             entry.GridSlot = null;
             _gridWindow?.Refresh();
             return;
         }
 
-        var usedSlots = new HashSet<int>(_streams.Where(s => s.GridSlot.HasValue).Select(s => s.GridSlot!.Value));
-        int? freeSlot = null;
-        for (int i = 0; i < 6; i++)
-        {
-            if (!usedSlots.Contains(i))
-            {
-                freeSlot = i;
-                break;
-            }
-        }
+        var slot = newIndex - 1;
+        if (slot < 0 || slot > 5) return;
 
-        if (freeSlot == null) return;
+        if (usedSlots.Contains(slot))
+        {
+            cb.SelectedIndex = entry.GridSlot.HasValue ? entry.GridSlot.Value + 1 : 0;
+            return;
+        }
 
         if (entry.FloatWindow != null)
         {
@@ -190,7 +191,7 @@ public partial class DashboardWindow : Window
             entry.FloatWindow.Close();
         }
 
-        entry.GridSlot = freeSlot;
+        entry.GridSlot = slot;
 
         if (_gridWindow == null && _libVlc != null)
         {

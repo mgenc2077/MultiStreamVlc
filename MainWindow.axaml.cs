@@ -77,31 +77,31 @@ public partial class MainWindow : Window
     {
         if (_streams == null || _libVlc == null) return;
 
+        var assigned = new Dictionary<int, StreamEntry>();
         for (int i = 0; i < _views.Length; i++)
         {
             var entry = _streams.FirstOrDefault(s => s.GridSlot == i);
-
             if (entry != null)
+                assigned[i] = entry;
+        }
+
+        foreach (var view in _views)
+        {
+            if (view.MediaPlayer != null)
             {
-                entry.Player ??= new MediaPlayer(_libVlc);
-
-                if (_views[i].MediaPlayer != entry.Player)
-                {
-                    _views[i].MediaPlayer = entry.Player;
-                }
-
-                if (!string.IsNullOrWhiteSpace(entry.Url) && entry.Player.State != VLCState.Playing)
-                {
-                    PlayEntry(entry);
-                }
+                view.MediaPlayer.Stop();
+                view.MediaPlayer = null;
             }
-            else
+        }
+
+        foreach (var (slot, entry) in assigned)
+        {
+            entry.Player ??= new MediaPlayer(_libVlc);
+            _views[slot].MediaPlayer = entry.Player;
+
+            if (!string.IsNullOrWhiteSpace(entry.Url) && entry.Player.State != VLCState.Playing)
             {
-                if (_views[i].MediaPlayer != null)
-                {
-                    _views[i].MediaPlayer.Stop();
-                    _views[i].MediaPlayer = null;
-                }
+                PlayEntry(entry);
             }
         }
     }

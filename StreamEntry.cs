@@ -32,12 +32,28 @@ public class StreamEntry : INotifyPropertyChanged
     public int? GridSlot
     {
         get => _gridSlot;
-        set { _gridSlot = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsPinnedToGrid)); OnPropertyChanged(nameof(GridLabel)); }
+        set
+        {
+            _gridSlot = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(GridSlotIndex));
+        }
     }
 
-    public bool IsPinnedToGrid => _gridSlot.HasValue;
-
-    public string GridLabel => _gridSlot.HasValue ? $"✓ Grid {_gridSlot.Value + 1}" : "";
+    public int GridSlotIndex
+    {
+        get => _gridSlot.HasValue ? _gridSlot.Value + 1 : 0;
+        set
+        {
+            var newSlot = value <= 0 ? (int?)null : value - 1;
+            if (_gridSlot != newSlot)
+            {
+                _gridSlot = newSlot;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(GridSlot));
+            }
+        }
+    }
 
     public StreamWindow? FloatWindow
     {
