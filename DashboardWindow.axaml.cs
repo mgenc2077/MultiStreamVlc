@@ -147,22 +147,50 @@ public partial class DashboardWindow : Window
             return;
         }
 
+        if (entry.GridSlot.HasValue)
+        {
+            entry.GridSlot = null;
+            _gridWindow?.Refresh();
+        }
+
         var win = new StreamWindow(_libVlc, entry);
         win.Show(this);
     }
 
-    private void SendToGrid_Click(object? sender, RoutedEventArgs e)
+    private void PinToGrid_Click(object? sender, RoutedEventArgs e)
     {
         var id = GetIdFromTag(sender);
         if (id == null) return;
         var entry = FindById(id.Value);
         if (entry == null) return;
 
+        if (entry.GridSlot.HasValue)
+        {
+            entry.GridSlot = null;
+            _gridWindow?.Refresh();
+            return;
+        }
+
+        var usedSlots = new HashSet<int>(_streams.Where(s => s.GridSlot.HasValue).Select(s => s.GridSlot!.Value));
+        int? freeSlot = null;
+        for (int i = 0; i < 6; i++)
+        {
+            if (!usedSlots.Contains(i))
+            {
+                freeSlot = i;
+                break;
+            }
+        }
+
+        if (freeSlot == null) return;
+
         if (entry.FloatWindow != null)
         {
+            entry.Player?.Stop();
             entry.FloatWindow.Close();
-            entry.FloatWindow = null;
         }
+
+        entry.GridSlot = freeSlot;
 
         if (_gridWindow == null && _libVlc != null)
         {
@@ -175,7 +203,6 @@ public partial class DashboardWindow : Window
         }
         else
         {
-            _gridWindow?.Activate();
             _gridWindow?.Refresh();
         }
     }
@@ -220,10 +247,16 @@ public partial class DashboardWindow : Window
         if (entry == null) return;
 
         StopStream(entry);
+        entry.GridSlot = null;
         entry.FloatWindow?.Close();
         entry.Player?.Dispose();
         entry.Player = null;
         _streams.Remove(entry);
+
+        for (int i = 0; i < _streams.Count; i++)
+        {
+            _streams[i].Title = $"Stream {i + 1}";
+        }
     }
 
     private void LaunchGrid_Click(object? sender, RoutedEventArgs e)

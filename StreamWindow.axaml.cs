@@ -72,9 +72,10 @@ public partial class StreamWindow : Window
 
     private void OnClosed(object? sender, EventArgs e)
     {
-        _entry.Player?.Stop();
-        _entry.RefreshStatus();
-        _entry.FloatWindow = null;
         VolumeSlider.ValueChanged -= OnVolumeChanged;
+        _entry.Player?.Stop();
+        Video.MediaPlayer = null;
+        _entry.FloatWindow = null;
+        _entry.RefreshStatus();
     }
 }

@@ -28,6 +28,17 @@ public class StreamEntry : INotifyPropertyChanged
 
     public MediaPlayer? Player { get; set; }
 
+    private int? _gridSlot;
+    public int? GridSlot
+    {
+        get => _gridSlot;
+        set { _gridSlot = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsPinnedToGrid)); OnPropertyChanged(nameof(GridLabel)); }
+    }
+
+    public bool IsPinnedToGrid => _gridSlot.HasValue;
+
+    public string GridLabel => _gridSlot.HasValue ? $"✓ Grid {_gridSlot.Value + 1}" : "";
+
     public StreamWindow? FloatWindow
     {
         get => _floatWindow;

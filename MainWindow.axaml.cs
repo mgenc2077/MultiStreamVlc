@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using LibVLCSharp.Avalonia;
@@ -34,17 +35,40 @@ public partial class MainWindow : Window
         if (_streams == null || _libVlc == null) return;
 
         _streams.CollectionChanged += OnStreamsChanged;
+        foreach (var entry in _streams)
+        {
+            entry.PropertyChanged += OnEntryPropertyChanged;
+        }
+
         RefreshGrid();
 
         Closed += OnClosed;
     }
 
-    public void Refresh()
+    private void OnStreamsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        if (e.NewItems != null)
+        {
+            foreach (StreamEntry entry in e.NewItems)
+                entry.PropertyChanged += OnEntryPropertyChanged;
+        }
+        if (e.OldItems != null)
+        {
+            foreach (StreamEntry entry in e.OldItems)
+                entry.PropertyChanged -= OnEntryPropertyChanged;
+        }
         RefreshGrid();
     }
 
-    private void OnStreamsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void OnEntryPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(StreamEntry.GridSlot))
+        {
+            RefreshGrid();
+        }
+    }
+
+    public void Refresh()
     {
         RefreshGrid();
     }
@@ -53,13 +77,12 @@ public partial class MainWindow : Window
     {
         if (_streams == null || _libVlc == null) return;
 
-        var activeEntries = _streams.Take(_views.Length).ToList();
-
         for (int i = 0; i < _views.Length; i++)
         {
-            if (i < activeEntries.Count)
+            var entry = _streams.FirstOrDefault(s => s.GridSlot == i);
+
+            if (entry != null)
             {
-                var entry = activeEntries[i];
                 entry.Player ??= new MediaPlayer(_libVlc);
 
                 if (_views[i].MediaPlayer != entry.Player)
@@ -97,6 +120,10 @@ public partial class MainWindow : Window
         if (_streams != null)
         {
             _streams.CollectionChanged -= OnStreamsChanged;
+            foreach (var entry in _streams)
+            {
+                entry.PropertyChanged -= OnEntryPropertyChanged;
+            }
         }
 
         foreach (var view in _views)
