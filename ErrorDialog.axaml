@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MultiStreamVlc.ErrorDialog"
+        Title="Error"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight">
+    <StackPanel Margin="20" MinWidth="350">
+        <TextBlock x:Name="MessageText"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,16" />
+        <Button Content="OK"
+                HorizontalAlignment="Right"
+                MinWidth="80"
+                Click="Ok_Click" />
+    </StackPanel>
+</Window>
