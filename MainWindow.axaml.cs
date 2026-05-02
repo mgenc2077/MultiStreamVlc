@@ -62,6 +62,12 @@ public partial class MainWindow : Window
             new MediaPlayer(_libVlc),
         };
 
+        Opened += OnOpened;
+        Closed += (_, _) => Cleanup();
+    }
+
+    private void OnOpened(object? sender, EventArgs e)
+    {
         V1.MediaPlayer = _players[0];
         V2.MediaPlayer = _players[1];
         V3.MediaPlayer = _players[2];
@@ -69,8 +75,7 @@ public partial class MainWindow : Window
         V5.MediaPlayer = _players[4];
         V6.MediaPlayer = _players[5];
 
-        Opened += (_, _) => PlayAll();
-        Closed += (_, _) => Cleanup();
+        PlayAll();
     }
 
     private void PlayAll()

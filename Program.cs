@@ -7,8 +7,11 @@ class Program
 {
     [STAThread]
     public static int Main(string[] args)
-        => BuildAvaloniaApp()
+    {
+        Environment.SetEnvironmentVariable("GDK_BACKEND", "x11");
+        return BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
+    }
 
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
