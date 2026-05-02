@@ -1,52 +1,123 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:MultiStreamVlc"
-        x:Class="MultiStreamVlc.DashboardWindow"
-        Title="Multi Stream VLC — Dashboard"
-        Width="700" Height="500"
-        Background="#FF111111"
-        Icon="avares://MultiStreamVlc/Assets/MultiStreamVLC.ico">
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MultiStreamVlc"
+    x:Class="MultiStreamVlc.DashboardWindow"
+    Title="Multi Stream VLC — Dashboard"
+    Width="800"
+    Height="500"
+    Background="#FF111111"
+    Icon="avares://MultiStreamVlc/Assets/MultiStreamVLC.ico"
+>
 
     <DockPanel Margin="12">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12" Spacing="8">
-            <Button Content="New Stream" Click="NewStream_Click"/>
-            <Button Content="Quick-Create From Clipboard" Click="ClipboardStream_Click"/>
-            <Button Content="Launch Grid View" Click="LaunchGrid_Click"/>
+        <StackPanel
+            DockPanel.Dock="Top"
+            Orientation="Horizontal"
+            Margin="0,0,0,12"
+            Spacing="8"
+        >
+            <Button Content="New Stream" Click="NewStream_Click" />
+            <Button
+                Content="Quick-Create From Clipboard"
+                Click="ClipboardStream_Click"
+            />
+            <Button Content="Launch Grid View" Click="LaunchGrid_Click" />
         </StackPanel>
 
         <ListBox x:Name="StreamList" Background="#FF1A1A1A">
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="local:StreamEntry">
-                    <Border CornerRadius="6" Background="#FF252525" Padding="10" Margin="0,0,0,6">
+                    <Border
+                        CornerRadius="6"
+                        Background="#FF252525"
+                        Padding="10"
+                        Margin="0,0,0,6"
+                    >
                         <Grid ColumnDefinitions="*,Auto">
-                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                 <TextBlock Text="{Binding Title}" Foreground="White" FontSize="14" Margin="0,0,0,4"/>
-                                 <TextBlock Text="{Binding Url}" Foreground="#FF999999" FontSize="11"
-                                            TextTrimming="CharacterEllipsis" MaxWidth="400"/>
+                             <StackPanel
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                            >
+                                 <TextBlock
+                                    Text="{Binding Title}"
+                                    Foreground="White"
+                                    FontSize="14"
+                                    Margin="0,0,0,4"
+                                />
+                                 <TextBlock
+                                    Text="{Binding Url}"
+                                    Foreground="#FF999999"
+                                    FontSize="11"
+                                    TextTrimming="CharacterEllipsis"
+                                    MaxWidth="400"
+                                />
                              </StackPanel>
-                             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                                 <TextBlock Text="Grid:" Foreground="#FFAAAAAA" FontSize="12"
-                                            VerticalAlignment="Center"/>
-                                 <ComboBox x:Name="GridSelector" Tag="{Binding Id}"
-                                           SelectedIndex="{Binding GridSlotIndex}"
-                                           SelectionChanged="GridSelector_SelectionChanged"
-                                           MinWidth="55" VerticalAlignment="Center">
-                                     <ComboBoxItem Content="—"/>
-                                     <ComboBoxItem Content="1"/>
-                                     <ComboBoxItem Content="2"/>
-                                     <ComboBoxItem Content="3"/>
-                                     <ComboBoxItem Content="4"/>
-                                     <ComboBoxItem Content="5"/>
-                                     <ComboBoxItem Content="6"/>
+                             <StackPanel
+                                Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="6"
+                                VerticalAlignment="Center"
+                            >
+                                 <TextBlock
+                                    Text="Grid:"
+                                    Foreground="#FFAAAAAA"
+                                    FontSize="12"
+                                    VerticalAlignment="Center"
+                                />
+                                 <ComboBox
+                                    x:Name="GridSelector"
+                                    Tag="{Binding Id}"
+                                    SelectedIndex="{Binding GridSlotIndex}"
+                                    SelectionChanged="GridSelector_SelectionChanged"
+                                    MinWidth="55"
+                                    VerticalAlignment="Center"
+                                >
+                                     <ComboBoxItem Content="—" />
+                                     <ComboBoxItem Content="1" />
+                                     <ComboBoxItem Content="2" />
+                                     <ComboBoxItem Content="3" />
+                                     <ComboBoxItem Content="4" />
+                                     <ComboBoxItem Content="5" />
+                                     <ComboBoxItem Content="6" />
                                  </ComboBox>
-                                 <TextBlock Text="{Binding Status}" Foreground="#FFAAAAAA" FontSize="12"
-                                            VerticalAlignment="Center" Margin="8,0,8,0"/>
-                                 <Button Content="▶ Play" Tag="{Binding Id}" Click="PlayOne_Click"/>
-                                 <Button Content="■ Stop" Tag="{Binding Id}" Click="StopOne_Click"/>
-                                 <Button Content="↻ Reconnect" Tag="{Binding Id}" Click="ReconnectOne_Click"/>
-                                 <Button Content="⊞ Float" Tag="{Binding Id}" Click="FloatOne_Click"/>
-                                 <Button Content="✎ URL" Tag="{Binding Id}" Click="ChangeUrlOne_Click"/>
-                                 <Button Content="🗑" Tag="{Binding Id}" Click="RemoveOne_Click"/>
+                                 <TextBlock
+                                    Text="{Binding Status}"
+                                    Foreground="#FFAAAAAA"
+                                    FontSize="12"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,8,0"
+                                />
+                                 <Button
+                                    Content="▶ Play"
+                                    Tag="{Binding Id}"
+                                    Click="PlayOne_Click"
+                                />
+                                 <Button
+                                    Content="■ Stop"
+                                    Tag="{Binding Id}"
+                                    Click="StopOne_Click"
+                                />
+                                 <Button
+                                    Content="↻ Reconnect"
+                                    Tag="{Binding Id}"
+                                    Click="ReconnectOne_Click"
+                                />
+                                 <Button
+                                    Content="⊞ Float"
+                                    Tag="{Binding Id}"
+                                    Click="FloatOne_Click"
+                                />
+                                 <Button
+                                    Content="✎ URL"
+                                    Tag="{Binding Id}"
+                                    Click="ChangeUrlOne_Click"
+                                />
+                                 <Button
+                                    Content="🗑"
+                                    Tag="{Binding Id}"
+                                    Click="RemoveOne_Click"
+                                />
                              </StackPanel>
                         </Grid>
                     </Border>

@@ -1,6 +1,6 @@
 ---
 name: multistreamvlc
-description: Project-specific skill for MultiStreamVlc — a cross-platform Avalonia 12 + LibVLCSharp desktop app that plays 6 HLS/m3u8 streams simultaneously. Activate when working on any file in this repository.
+description: Project-specific skill for MultiStreamVlc — a cross-platform Avalonia 12 + LibVLCSharp desktop app that plays multiple HLS/m3u8 streams in floating windows or a 2x3 grid. Activate when working on any file in this repository.
 ---
 
 # MultiStreamVlc — Project Skill
@@ -18,21 +18,24 @@ description: Project-specific skill for MultiStreamVlc — a cross-platform Aval
 | File | Role |
 |------|------|
 | `Program.cs` | Avalonia entry point. Sets `GDK_BACKEND=x11` for XWayland before anything else. |
-| `App.axaml` | Application XAML — FluentTheme, dark mode |
-| `App.axaml.cs` | App lifecycle, crash logging to `~/Desktop/MultiStreamVlc-crashlog.txt` |
-| `MainWindow.axaml` | Main layout — left panel (controls) + right panel (2x3 VideoView grid) |
-| `MainWindow.axaml.cs` | All app logic — 6 MediaPlayers, play/stop/reconnect/volume/URL |
-| `ChangeUrlDialog.axaml(.cs)` | Modal to change a tile's stream URL |
+| `App.axaml(.cs)` | Application XAML — FluentTheme, dark mode, crash logging to `~/Desktop/MultiStreamVlc-crashlog.txt` |
+| `DashboardWindow.axaml(.cs)` | Main window (800x500). Manages `ObservableCollection<StreamEntry>`. Toolbar: New Stream, Quick-Create From Clipboard, Launch Grid View. Each row: Grid slot ComboBox, status, play/stop/reconnect/float/URL/remove. |
+| `StreamWindow.axaml(.cs)` | Floating window for a single stream. `VideoView` + volume/stop/reconnect controls. Detaches `Video.MediaPlayer = null` on close. |
+| `MainWindow.axaml(.cs)` | 2x3 grid view. Observes `StreamEntry.GridSlot` changes. Two-pass refresh: detach all views, then assign pinned entries. |
+| `StreamEntry.cs` | Data model (`INotifyPropertyChanged`): Id, Title, Url, Player, FloatWindow, GridSlot, GridSlotIndex, Status. Titles auto-renumber on deletion. |
+| `ChangeUrlDialog.axaml(.cs)` | Modal to change a stream's URL |
 | `ErrorDialog.axaml(.cs)` | Simple error popup (Avalonia has no MessageBox) |
 | `M3U8-Sniffer/` | Standalone Firefox extension, NOT part of .NET build |
 
 ## Architecture
 
-- Single `LibVLC` instance shared by 6 `MediaPlayer` instances
-- `VideoView` controls (V1–V6) in a 2×3 Grid, each assigned a `MediaPlayer`
-- Side panel has per-stream controls using `Tag` property (int 0–5) to identify which stream
-- Default URLs are placeholders (`https://example.com/streamN.m3u8`)
-- Auto-plays all streams on window open
+- Single `LibVLC` instance created in `DashboardWindow`, shared by all windows
+- Unlimited streams managed from dashboard, up to 6 pinned to grid via `StreamEntry.GridSlot`
+- `GridSlotIndex` (0=unpinned, 1-6=slot) provides ComboBox-friendly binding
+- Grid observes `ObservableCollection.CollectionChanged` and `StreamEntry.PropertyChanged` for live updates
+- `Play` button auto-opens a `StreamWindow` if no float window exists (so `MediaPlayer` has a `VideoView`)
+- `Float` button unpins from grid before opening float window
+- Grid slot ComboBox rejects already-taken slots
 
 ## Critical Patterns (do not break these)
 
@@ -40,7 +43,14 @@ description: Project-specific skill for MultiStreamVlc — a cross-platform Aval
 `Program.cs` sets `GDK_BACKEND=x11` before Avalonia initializes. LibVLCSharp's `VideoView` on Linux only supports X11 window embedding via `MediaPlayer.XWindow`. Native Wayland surfaces cause VLC to open separate windows. **Do not remove this env var.**
 
 ### MediaPlayer Assignment Timing
-`VideoView.MediaPlayer` is assigned in the `Opened` event handler (`OnOpened`), NOT in the constructor. The native platform handles don't exist until after the first layout pass. Assigning too early causes `Attach()` to fail silently → separate VLC windows.
+`VideoView.MediaPlayer` is assigned in the `Opened` event handler (`OnOpened`), NOT in the constructor. The native platform handles don't exist until after the first layout pass. Assigning too early causes `Attach()` to fail silently -> separate VLC windows.
+
+### MediaPlayer Detach Before Reassign
+When moving a `MediaPlayer` between `VideoView`s (grid-to-grid, float-to-grid, grid-to-float), the player MUST be stopped and detached from the old view (`view.MediaPlayer = null`) before assigning to the new view. Otherwise VLC holds the old X11 handle and opens a new window. Key locations:
+- `MainWindow.RefreshGrid()` — full detach-all pass, then reassign pass
+- `StreamWindow.OnClosed` — sets `Video.MediaPlayer = null`
+- `DashboardWindow.GridSelector_SelectionChanged` — stops player before closing float window
+- `DashboardWindow.FloatOne_Click` — clears `GridSlot` before opening float
 
 ### Platform-Conditional VLC Args
 VLC CLI flags differ by OS:
@@ -63,7 +73,7 @@ Selected via `RuntimeInformation.IsOSPlatform()`.
 | `AvaloniaXamlLoader.Load(this)` | Requires `using Avalonia.Markup.Xaml;` |
 | `Owner` property on Window | Protected — cannot set externally. Use `ShowDialog(parent)` instead. |
 
-## NuGet Packages (as of migration)
+## NuGet Packages
 
 | Package | Version | Notes |
 |---|---|---|
@@ -93,8 +103,10 @@ Extensions: `.m3u8`, `.mp4`, `.mkv`, `.ts`, `.flv`, `.avi`, `.mov`
 ## Known Issues / Future Work
 
 - **Wayland native embedding**: Currently impossible — LibVLCSharp only supports `MediaPlayer.XWindow` (X11). If VLC/LibVLCSharp adds Wayland surface embedding, the `GDK_BACKEND=x11` hack can be removed.
-- **Separate VLC window mode**: When `VideoView` fails to embed (e.g. no XWayland), VLC opens each stream in its own window. Controls still work. This could be intentionally implemented as a feature using `MediaPlayer` without `VideoView`.
-- **X11 fallback**: Not currently implemented. The app runs under XWayland on Wayland systems.
+- **Drag-and-drop grid assignment**: Not implemented. Grid slots are assigned via ComboBox dropdown.
+- **Grid view auto-updating with new streams**: Grid only shows streams with a `GridSlot` set. New streams are unpinned by default.
+- **Stream window position/size memory**: Not persisted between sessions.
+- **Config persistence**: Stream list and URLs are not saved between sessions.
 
 ## Logs
 

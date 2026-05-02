@@ -4,7 +4,7 @@
 
 Cross-platform desktop app (.NET 8.0) that plays multiple HLS/m3u8 streams simultaneously using LibVLCSharp. Built with Avalonia 12 UI framework. Single csproj, no solution file.
 
-Streams can be viewed in floating individual windows or in a 2×3 grid view. A dashboard window manages all streams.
+A dashboard window manages all streams. Streams can be viewed in floating individual windows or pinned to specific slots in a 2x3 grid view. Streams are not capped — unlimited streams can be managed from the dashboard, with up to 6 pinned to the grid at once.
 
 ## Build & Run
 
@@ -27,11 +27,11 @@ VLC provides `libvlc.so` / `libvlccore.so` at the system level — no NuGet pack
 
 - **Program.cs** — Avalonia entry point, sets `GDK_BACKEND=x11` for XWayland compat, bootstraps `App`
 - **App.axaml + App.axaml.cs** — application setup, dark FluentTheme, crash logging to `~/Desktop/MultiStreamVlc-crashlog.txt`. Launches `DashboardWindow` as main window.
-- **DashboardWindow.axaml + .cs** — app's home screen. Manages a dynamic list of `StreamEntry` items. "New Stream" adds entries, "Launch Grid View" opens the 2×3 grid. Each row has play/stop/reconnect/float/URL/remove controls.
-- **StreamWindow.axaml + .cs** — floating window for a single stream. Contains `VideoView` + minimal control bar (volume, stop, reconnect).
-- **MainWindow.axaml + .cs** — 2×3 grid view. Accepts up to 6 `StreamEntry` items from the dashboard. Grid-only, no side panel.
-- **StreamEntry.cs** — data model (`INotifyPropertyChanged`): Id, Title, Url, Player, FloatWindow, Status
-- **ChangeUrlDialog.axaml + .cs** — modal dialog for per-tile URL editing
+- **DashboardWindow.axaml + .cs** — app's home screen (800x500). Manages a dynamic `ObservableCollection<StreamEntry>`. Toolbar: "New Stream", "Quick-Create From Clipboard", "Launch Grid View". Each stream row has a Grid slot selector (ComboBox, slots 1-6 or "—"), status, play/stop/reconnect/float/URL/remove controls.
+- **StreamWindow.axaml + .cs** — floating window for a single stream. Contains `VideoView` + minimal control bar (volume, stop, reconnect). On close, detaches `Video.MediaPlayer = null` to release the native X11 handle.
+- **MainWindow.axaml + .cs** — 2x3 grid view. Observes the dashboard's `ObservableCollection<StreamEntry>` and reacts to `GridSlot` property changes. Uses a two-pass refresh: detach all views first, then assign pinned entries. Exposes `Refresh()` for manual invocations.
+- **StreamEntry.cs** — data model (`INotifyPropertyChanged`): Id, Title, Url, Player, FloatWindow, GridSlot, GridSlotIndex (ComboBox-friendly), Status. Stream titles auto-renumber on deletion.
+- **ChangeUrlDialog.axaml + .cs** — modal dialog for per-stream URL editing
 - **ErrorDialog.axaml + .cs** — simple error popup (Avalonia has no built-in MessageBox)
 
 ## Key NuGet Packages
@@ -61,6 +61,9 @@ Standalone Firefox extension (Manifest V2) for capturing .m3u8 URLs. Not part of
 - **XWayland required** — LibVLCSharp's `VideoView` embeds video via X11 window handles (`MediaPlayer.XWindow`). Native Wayland surfaces won't work. `Program.cs` forces `GDK_BACKEND=x11` at startup. Removing this causes VLC to open streams in separate windows instead of embedding them.
 - **MediaPlayer assignment timing** — `VideoView.MediaPlayer` must be set in the `Opened` event (after native handles are created), not in the constructor. Setting it too early causes `Attach()` to fail silently and VLC opens separate windows.
 - **Single LibVLC instance** — created once in `DashboardWindow`, shared by all `StreamWindow` and `MainWindow` instances. Do not create additional `LibVLC` instances.
+- **MediaPlayer detach before reassign** — When moving a `MediaPlayer` between `VideoView`s (grid slot change, float-to-grid, grid-to-float), the player MUST be stopped and detached from the old view (`view.MediaPlayer = null`) before assigning to a new view. Otherwise VLC holds the old X11 handle and opens a new window. `MainWindow.RefreshGrid()` does a full detach-all-pass then reassign-pass. `StreamWindow.OnClosed` sets `Video.MediaPlayer = null`.
+- **Play button auto-floats** — Pressing "Play" on a stream without an existing float window opens a `StreamWindow` automatically, so the `MediaPlayer` has a `VideoView` to attach to. Without this, VLC opens a separate window.
+- **Grid slot conflicts** — `GridSelector_SelectionChanged` rejects slot selections that are already taken by another stream, reverting the ComboBox to its previous value.
 - **No built-in MessageBox** — use the custom `ErrorDialog`
 - **No `ResizeMode`** property on Window — does not exist in Avalonia
 - **Clipboard API** — Avalonia 12 uses `clipboard.TryGetTextAsync()` (extension method from `Avalonia.Input.Platform`)
