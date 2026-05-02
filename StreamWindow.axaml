@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
+        x:Class="MultiStreamVlc.StreamWindow"
+        Title="Stream"
+        Width="640" Height="480"
+        Background="#FF111111"
+        Icon="avares://MultiStreamVlc/Assets/MultiStreamVLC.ico">
+
+    <DockPanel>
+        <Border DockPanel.Dock="Bottom" Background="#FF1A1A1A" Padding="8,6">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                <TextBlock Grid.Column="0" Text="🔊" FontSize="16"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <Slider Grid.Column="1" x:Name="VolumeSlider"
+                        Minimum="0" Maximum="100" Value="100"
+                        VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <Button Grid.Column="2" Content="■ Stop" MinWidth="70"
+                        Margin="0,0,6,0" Click="Stop_Click"/>
+                <Button Grid.Column="3" Content="↻ Reconnect" MinWidth="90"
+                        Click="Reconnect_Click"/>
+            </Grid>
+        </Border>
+
+        <vlc:VideoView x:Name="Video"/>
+    </DockPanel>
+</Window>
