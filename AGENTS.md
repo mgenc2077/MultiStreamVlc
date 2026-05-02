@@ -23,11 +23,11 @@ VLC provides `libvlc.so` / `libvlccore.so` at the system level — no NuGet pack
 
 ## Architecture
 
-- **Program.cs** — Avalonia entry point, bootstraps `App`
+- **Program.cs** — Avalonia entry point, sets `GDK_BACKEND=x11` for XWayland compat, bootstraps `App`
 - **App.axaml + App.axaml.cs** — application setup, dark FluentTheme, crash logging to `~/Desktop/MultiStreamVlc-crashlog.txt`
 - **MainWindow.axaml + MainWindow.axaml.cs** — all app logic: creates 6 `MediaPlayer` instances, handles play/stop/reconnect/volume/URL changes. Per-tile controls use `Tag` properties (0–5)
 - **ChangeUrlDialog.axaml + .cs** — modal dialog for per-tile URL editing
-- **ErrorDialog.axaml + .cs** — simple error popup (replaces WPF `MessageBox` which Avalonia lacks)
+- **ErrorDialog.axaml + .cs** — simple error popup (Avalonia has no built-in MessageBox)
 
 ## Key NuGet Packages
 
@@ -48,13 +48,16 @@ Standalone Firefox extension (Manifest V2) for capturing .m3u8 URLs. Not part of
 - Default stream URLs are placeholders (`https://example.com/streamN.m3u8`)
 - URL validation accepts schemes: http, https, rtsp, rtmp, udp, file; extensions: .m3u8, .mp4, .mkv, .ts, .flv, .avi, .mov
 - VLC audio backend is platform-conditional: `--aout=pulse` on Linux (PipeWire compat), `--aout=directsound` on Windows
+- Icons must use `<AvaloniaResource>` in csproj (not `<Resource>`) to be accessible via `avares://` URIs
 
-## Avalonia Gotchas
+## Critical Gotchas
 
+- **XWayland required** — LibVLCSharp's `VideoView` embeds video via X11 window handles (`MediaPlayer.XWindow`). Native Wayland surfaces won't work. `Program.cs` forces `GDK_BACKEND=x11` at startup. Removing this causes VLC to open streams in separate windows instead of embedding them.
+- **MediaPlayer assignment timing** — `VideoView.MediaPlayer` must be set in the `Opened` event (after native handles are created), not in the constructor. Setting it too early causes `Attach()` to fail silently and VLC opens separate windows.
 - **No built-in MessageBox** — use the custom `ErrorDialog`
-- **No `ResizeMode`** property on Window — removed during WPF migration
+- **No `ResizeMode`** property on Window — does not exist in Avalonia
 - **Clipboard API** — Avalonia 12 uses `clipboard.TryGetTextAsync()` (extension method from `Avalonia.Input.Platform`)
 - **VideoView airspace** — UI overlays on `VideoView` must be children of the `VideoView` element, not siblings
 - **`ShowDialog()`** is async — `await dlg.ShowDialog(this)` returns after close
 - **`RangeBaseValueChangedEventArgs`** lives in `Avalonia.Controls.Primitives`
-- **Wayland** — Avalonia 12 and VLC both auto-detect Wayland. No X11 dependency required. X11 fallback is not currently implemented.
+- **`AvaloniaXamlLoader.Load(this)`** in `App.axaml.cs` requires `using Avalonia.Markup.Xaml;`
