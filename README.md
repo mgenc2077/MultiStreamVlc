@@ -2,18 +2,20 @@
 
 ![MultiStreamVlc-logo](https://github.com/mgenc2077/MultiStreamVlc/blob/main/Assets/MultiStreamVLC.png?raw=true)
 
-MultiStreamVlc is a cross-platform desktop application built with **Avalonia 12** and **LibVLCSharp** that displays and controls multiple video streams (HLS/m3u8) simultaneously in a grid layout. Originally created to watch multiple streams at once during collab streams.
+MultiStreamVlc is a cross-platform desktop application built with **Avalonia 12** and **LibVLCSharp** that displays and controls multiple video streams (HLS/m3u8) simultaneously. Originally created to watch multiple streams at once during collab streams.
 
 ![MultiStreamVlc](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/screenshot.png?raw=true)
 
 ## Features
 
-- **Multi-View**: Watch 6 video streams at once in a 2x3 grid.
-- **Granular Audio Control**: Individual volume sliders for each stream (0-100%).
+- **Dashboard**: Central hub for managing all streams. Add, remove, and control streams from one window.
+- **Floating Windows**: Pop out any stream into its own resizable window with volume control.
+- **Grid View**: 2x3 grid displaying up to 6 pinned streams simultaneously.
+- **Grid Slot Selector**: Assign streams to specific grid slots (1-6) via dropdown — freely mix and match which streams appear in the grid.
+- **Quick-Create From Clipboard**: Instantly create a new stream from a URL copied to your clipboard.
+- **Granular Audio Control**: Individual volume sliders for each floating window.
 - **Independent Playback**: Play, Stop, and Reconnect each stream independently.
-- **Global Controls**: Play All, Stop All, and Reconnect All buttons for mass management.
-- **Dynamic Source**: "Change URL" button allows you to update the stream URL for any tile on the fly.
-- **Clipboard URL**: Paste a stream URL directly from clipboard to any tile.
+- **URL Editing**: Change any stream's URL on the fly.
 - **Cross-Platform**: Runs on Linux and Windows (via Avalonia 12 / .NET 8.0).
 
 ## M3U8 Sniffer
@@ -63,10 +65,12 @@ On Wayland systems, the app runs under XWayland for video embedding compatibilit
 
 ## Usage
 
-- **Streams**: By default, the app is configured with placeholder URLs (`https://example.com/streamN.m3u8`).
-- **Change URL**: Click "Change URL" for a popup to set a real HLS/m3u8 stream link per tile or "Clipboard URL" to paste directly from clipboard.
-- **Volume**: Use the slider on each tile to adjust volume. Slide to the far left (0) to mute.
-- **Reconnecting**: If a stream stalls or disconnects, click "Reconnect" on its specific panel.
+- **Dashboard**: The main window. Add streams with "New Stream" or "Quick-Create From Clipboard", then set URLs and control playback.
+- **Grid Slot Selector**: Each stream has a "Grid:" dropdown. Select a slot number (1-6) to pin the stream to that grid position, or select "—" to unpin. The grid window opens automatically when the first stream is pinned.
+- **Floating Windows**: Click "Float" to pop out a stream into its own window. If the stream was in the grid, it is automatically unpinned.
+- **Change URL**: Click "URL" for a popup to update the stream URL.
+- **Volume**: Use the slider in each floating window to adjust volume.
+- **Reconnecting**: If a stream stalls or disconnects, click "Reconnect".
 
 ## Tech Stack
 

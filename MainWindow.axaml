@@ -2,172 +2,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
         x:Class="MultiStreamVlc.MainWindow"
-        Title="Multi Stream VLC" Height="800" Width="1200"
+        Title="Multi Stream VLC — Grid View" Height="800" Width="1200"
         Background="#FF111111"
         Icon="avares://MultiStreamVlc/Assets/MultiStreamVLC.ico">
 
-    <Grid>
+    <Grid Margin="8" x:Name="VideoGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Side panel -->
-        <Border Grid.Column="0" Background="#FF1A1A1A" Padding="12">
-            <DockPanel>
-                <TextBlock DockPanel.Dock="Top"
-                           Text="Streams"
-                           Foreground="White"
-                           FontSize="18"
-                           Margin="0,0,0,12"/>
-
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
-                        <!-- Global -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <Button Content="Play All" Width="110" Margin="0,0,8,0" Click="PlayAll_Click"/>
-                            <Button Content="Stop All" Width="110" Click="StopAll_Click"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <Button Content="Reconnect All" Width="150" Click="ReconnectAll_Click"/>
-                        </StackPanel>
-
-                        <!-- Stream 1 -->
-                        <Border Margin="0,0,0,8" CornerRadius="8" Background="#FF252525" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Stream 1" Foreground="White" Margin="0,0,0,6"/>
-                                <WrapPanel>
-                                    <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="0" Click="PlayOne_Click"/>
-                                    <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="0" Click="StopOne_Click"/>
-                                    <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="0" Click="ReconnectOne_Click"/>
-                                    <Slider Width="100" Minimum="0" Maximum="100" Value="100"
-                                            VerticalAlignment="Center" Margin="0,0,6,6"
-                                            Tag="0" ValueChanged="VolumeOne_ValueChanged"/>
-                                    <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="ChangeUrlOne_Click"/>
-                                    <Button Content="Clipboard URL" Padding="8,2" Margin="6,0,0,0" Tag="0" Click="ChangeUrlClipboard_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Stream 2 -->
-                        <Border Margin="0,0,0,8" CornerRadius="8" Background="#FF252525" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Stream 2" Foreground="White" Margin="0,0,0,6"/>
-                                <WrapPanel>
-                                    <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="1" Click="PlayOne_Click"/>
-                                    <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="1" Click="StopOne_Click"/>
-                                    <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="1" Click="ReconnectOne_Click"/>
-                                    <Slider Width="100" Minimum="0" Maximum="100" Value="100"
-                                            VerticalAlignment="Center" Margin="0,0,6,6"
-                                            Tag="1" ValueChanged="VolumeOne_ValueChanged"/>
-                                    <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="ChangeUrlOne_Click"/>
-                                    <Button Content="Clipboard URL" Padding="8,2" Margin="6,0,0,0" Tag="1" Click="ChangeUrlClipboard_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Stream 3 -->
-                        <Border Margin="0,0,0,8" CornerRadius="8" Background="#FF252525" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Stream 3" Foreground="White" Margin="0,0,0,6"/>
-                                <WrapPanel>
-                                    <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="2" Click="PlayOne_Click"/>
-                                    <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="2" Click="StopOne_Click"/>
-                                    <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="2" Click="ReconnectOne_Click"/>
-                                    <Slider Width="100" Minimum="0" Maximum="100" Value="100"
-                                            VerticalAlignment="Center" Margin="0,0,6,6"
-                                            Tag="2" ValueChanged="VolumeOne_ValueChanged"/>
-                                    <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="ChangeUrlOne_Click"/>
-                                    <Button Content="Clipboard URL" Padding="8,2" Margin="6,0,0,0" Tag="2" Click="ChangeUrlClipboard_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Stream 4 -->
-                        <Border Margin="0,0,0,8" CornerRadius="8" Background="#FF252525" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Stream 4" Foreground="White" Margin="0,0,0,6"/>
-                                <WrapPanel>
-                                    <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="3" Click="PlayOne_Click"/>
-                                    <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="3" Click="StopOne_Click"/>
-                                    <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="3" Click="ReconnectOne_Click"/>
-                                    <Slider Width="100" Minimum="0" Maximum="100" Value="100"
-                                            VerticalAlignment="Center" Margin="0,0,6,6"
-                                            Tag="3" ValueChanged="VolumeOne_ValueChanged"/>
-                                    <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="ChangeUrlOne_Click"/>
-                                    <Button Content="Clipboard URL" Padding="8,2" Margin="6,0,0,0" Tag="3" Click="ChangeUrlClipboard_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Stream 5 -->
-                        <Border Margin="0,0,0,8" CornerRadius="8" Background="#FF252525" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Stream 5" Foreground="White" Margin="0,0,0,6"/>
-                                <WrapPanel>
-                                    <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="4" Click="PlayOne_Click"/>
-                                    <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="4" Click="StopOne_Click"/>
-                                    <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="4" Click="ReconnectOne_Click"/>
-                                    <Slider Width="100" Minimum="0" Maximum="100" Value="100"
-                                            VerticalAlignment="Center" Margin="0,0,6,6"
-                                            Tag="4" ValueChanged="VolumeOne_ValueChanged"/>
-                                    <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="ChangeUrlOne_Click"/>
-                                    <Button Content="Clipboard URL" Padding="8,2" Margin="6,0,0,0" Tag="4" Click="ChangeUrlClipboard_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Stream 6 -->
-                        <Border Margin="0,0,0,8" CornerRadius="8" Background="#FF252525" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="Stream 6" Foreground="White" Margin="0,0,0,6"/>
-                                <WrapPanel>
-                                    <Button Content="Play" Width="70" Margin="0,0,6,6" Tag="5" Click="PlayOne_Click"/>
-                                    <Button Content="Stop" Width="70" Margin="0,0,6,6" Tag="5" Click="StopOne_Click"/>
-                                    <Button Content="Reconnect" Width="90" Margin="0,0,6,6" Tag="5" Click="ReconnectOne_Click"/>
-                                    <Slider Width="100" Minimum="0" Maximum="100" Value="100"
-                                            VerticalAlignment="Center" Margin="0,0,6,6"
-                                            Tag="5" ValueChanged="VolumeOne_ValueChanged"/>
-                                    <Button Content="Change URL" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="ChangeUrlOne_Click"/>
-                                    <Button Content="Clipboard URL" Padding="8,2" Margin="6,0,0,0" Tag="5" Click="ChangeUrlClipboard_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </DockPanel>
+        <Border Grid.Row="0" Grid.Column="0" Margin="6" CornerRadius="8" Background="#FF222222">
+            <vlc:VideoView x:Name="V1"/>
         </Border>
-
-        <!-- Video grid -->
-        <Grid Grid.Column="1" Margin="8">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Border Grid.Row="0" Grid.Column="0" Margin="6" CornerRadius="8" Background="#FF222222">
-                <vlc:VideoView x:Name="V1"/>
-            </Border>
-            <Border Grid.Row="0" Grid.Column="1" Margin="6" CornerRadius="8" Background="#FF222222">
-                <vlc:VideoView x:Name="V2"/>
-            </Border>
-            <Border Grid.Row="0" Grid.Column="2" Margin="6" CornerRadius="8" Background="#FF222222">
-                <vlc:VideoView x:Name="V3"/>
-            </Border>
-            <Border Grid.Row="1" Grid.Column="0" Margin="6" CornerRadius="8" Background="#FF222222">
-                <vlc:VideoView x:Name="V4"/>
-            </Border>
-            <Border Grid.Row="1" Grid.Column="1" Margin="6" CornerRadius="8" Background="#FF222222">
-                <vlc:VideoView x:Name="V5"/>
-            </Border>
-            <Border Grid.Row="1" Grid.Column="2" Margin="6" CornerRadius="8" Background="#FF222222">
-                <vlc:VideoView x:Name="V6"/>
-            </Border>
-        </Grid>
+        <Border Grid.Row="0" Grid.Column="1" Margin="6" CornerRadius="8" Background="#FF222222">
+            <vlc:VideoView x:Name="V2"/>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="2" Margin="6" CornerRadius="8" Background="#FF222222">
+            <vlc:VideoView x:Name="V3"/>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="0" Margin="6" CornerRadius="8" Background="#FF222222">
+            <vlc:VideoView x:Name="V4"/>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" Margin="6" CornerRadius="8" Background="#FF222222">
+            <vlc:VideoView x:Name="V5"/>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="2" Margin="6" CornerRadius="8" Background="#FF222222">
+            <vlc:VideoView x:Name="V6"/>
+        </Border>
     </Grid>
 </Window>
