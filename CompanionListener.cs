@@ -90,6 +90,16 @@ public class CompanionListener
 
                 if (payload == null || string.IsNullOrWhiteSpace(payload.url))
                 {
+                    if (payload?.test == true)
+                    {
+                        context.Response.StatusCode = 200;
+                        context.Response.ContentType = "application/json";
+                        var pong = Encoding.UTF8.GetBytes("{\"status\":\"ok\"}");
+                        await context.Response.OutputStream.WriteAsync(pong, ct);
+                        context.Response.Close();
+                        continue;
+                    }
+
                     context.Response.StatusCode = 400;
                     context.Response.ContentType = "application/json";
                     var msg = Encoding.UTF8.GetBytes("{\"error\":\"Invalid JSON. Expected {\\\"name\\\":\\\"...\\\",\\\"url\\\":\\\"...\\\"}\"}");
@@ -131,5 +141,6 @@ public class CompanionListener
     {
         public string? name { get; set; }
         public string? url { get; set; }
+        public bool test { get; set; }
     }
 }

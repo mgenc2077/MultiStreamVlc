@@ -1,0 +1,247 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    width: 380px;
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #16213e;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2a2a4a;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #555;
+}
+
+.status-dot.connected { background: #0f8; }
+.status-dot.disconnected { background: #f44; }
+
+.status-text {
+    font-size: 11px;
+    color: #888;
+}
+
+.header-right {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-icon {
+    background: none;
+    border: 1px solid #333;
+    color: #ccc;
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-icon:hover {
+    background: #2a2a4a;
+    border-color: #555;
+}
+
+.btn-icon.btn-danger:hover {
+    background: #4a1a1a;
+    border-color: #f44;
+    color: #f88;
+}
+
+#status {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 0;
+    transition: all 0.2s;
+}
+
+#status:empty { display: none; padding: 0; }
+
+#status.ok { color: #0f8; }
+#status.err { color: #f44; }
+#status.info { color: #4af; }
+
+#list {
+    padding: 8px 10px;
+}
+
+.tab-block {
+    margin-bottom: 12px;
+    background: #16213e;
+    border-radius: 8px;
+    border: 1px solid #2a2a4a;
+    overflow: hidden;
+}
+
+.tab-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: #0f1629;
+    border-bottom: 1px solid #2a2a4a;
+}
+
+.tab-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #ccc;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    margin-right: 8px;
+}
+
+.tab-count {
+    font-size: 11px;
+    color: #888;
+    margin-right: 8px;
+}
+
+.btn-clear-tab {
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.btn-clear-tab:hover {
+    background: #4a1a1a;
+    border-color: #f44;
+    color: #f88;
+}
+
+.item-list {
+    list-style: none;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-bottom: 1px solid #1a1a30;
+    gap: 8px;
+}
+
+.item:last-child { border-bottom: none; }
+
+.item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.item-time {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.item-url {
+    font-size: 10px;
+    color: #555;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 1px;
+    cursor: pointer;
+}
+
+.item-url:hover { color: #4af; }
+
+.item-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.btn-send {
+    background: #0a3a2a;
+    border: 1px solid #0f8;
+    color: #0f8;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-send:hover { background: #0f8; color: #000; }
+.btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-copy {
+    background: none;
+    border: 1px solid #444;
+    color: #aaa;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-copy:hover { border-color: #4af; color: #4af; }
+
+.empty-hint {
+    text-align: center;
+    padding: 24px 16px;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.empty-hint kbd {
+    background: #2a2a4a;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    border: 1px solid #444;
+}
