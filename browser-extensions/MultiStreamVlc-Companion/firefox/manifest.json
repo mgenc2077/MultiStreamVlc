@@ -33,6 +33,11 @@
         "open_in_tab": true
     },
 
+    "web_accessible_resources": [{
+        "resources": ["welcome.html", "welcome.js", "icon.svg"],
+        "matches": ["<all_urls>"]
+    }],
+
     "commands": {
         "send-to-multistreamvlc": {
             "suggested_key": {

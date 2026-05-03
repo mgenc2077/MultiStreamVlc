@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiStreamVlc Companion — Welcome</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 520px;
+            width: 100%;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 80px;
+            height: 80px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 32px;
+        }
+        .card {
+            background: #16213e;
+            border: 1px solid #2a2a4a;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .card p {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #bbb;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field:last-of-type {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #aaa;
+        }
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #1a1a2e;
+            color: #fff;
+            outline: none;
+        }
+        input:focus {
+            border-color: #0f8;
+        }
+        .preview {
+            font-size: 13px;
+            color: #888;
+            margin-top: 6px;
+            font-family: monospace;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        button:hover { opacity: 0.85; }
+        .btn-save { background: #0f8; color: #000; }
+        .btn-skip { background: #335; color: #aaa; }
+        .btn-test { background: #335; color: #fff; }
+        .btn-test:disabled { opacity: 0.4; cursor: not-allowed; }
+        #status {
+            margin-top: 12px;
+            font-size: 13px;
+            min-height: 20px;
+        }
+        .status-ok { color: #0f8; }
+        .status-err { color: #f44; }
+        .status-info { color: #4af; }
+        .steps {
+            list-style: none;
+            counter-reset: step;
+            padding: 0;
+        }
+        .steps li {
+            counter-increment: step;
+            padding: 6px 0 6px 32px;
+            position: relative;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #bbb;
+        }
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #0f8;
+            color: #000;
+            font-weight: 700;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .link {
+            color: #4af;
+            text-decoration: none;
+        }
+        .link:hover { text-decoration: underline; }
+        kbd {
+            background: #2a2a4a;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            border: 1px solid #444;
+            color: #ddd;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="logo" src="icon.svg" alt="MultiStreamVlc Companion">
+        <h1>MultiStreamVlc Companion</h1>
+        <p class="subtitle">Browser extension for the <a class="link" href="https://github.com/mgenc2077/MultiStreamVlc" target="_blank">MultiStreamVlc</a> desktop app</p>
+
+        <div class="card">
+            <h2>Configure Connection</h2>
+            <p>Enter the host and port shown in the MultiStreamVlc desktop app's Settings window.</p>
+            <br>
+            <div class="field">
+                <label for="host">Host</label>
+                <input type="text" id="host" placeholder="localhost">
+            </div>
+            <div class="field">
+                <label for="port">Port</label>
+                <input type="number" id="port" min="1" max="65535" placeholder="55432">
+            </div>
+            <div class="preview">
+                Endpoint: <span id="endpoint-preview">http://localhost:55432/</span>
+            </div>
+            <div class="buttons">
+                <button class="btn-test" id="btn-test">Test Connection</button>
+                <button class="btn-save" id="btn-save">Save &amp; Continue</button>
+                <button class="btn-skip" id="btn-skip">Skip</button>
+            </div>
+            <div id="status"></div>
+        </div>
+
+        <div class="card">
+            <h2>How to Use</h2>
+            <ol class="steps">
+                <li>Open the <a class="link" href="https://github.com/mgenc2077/MultiStreamVlc" target="_blank">MultiStreamVlc</a> desktop app and start the companion listener via Settings</li>
+                <li>Navigate to a page with a video stream and start playback</li>
+                <li>Right-click anywhere and select <strong>Send to MultiStreamVlc</strong>, or press <kbd>Ctrl+Shift+S</kbd></li>
+                <li>The stream appears in the desktop app's dashboard — ready to play</li>
+                <li>Click the toolbar icon to view history and resend or copy past streams</li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <a class="link" href="https://github.com/mgenc2077/MultiStreamVlc" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <script src="welcome.js"></script>
+</body>
+</html>

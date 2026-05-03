@@ -141,6 +141,12 @@ browser.webRequest.onBeforeRequest.addListener(
     { urls: ["<all_urls>"] }
 );
 
+browser.runtime.onInstalled.addListener((details) => {
+    if (details.reason === "install") {
+        browser.tabs.create({ url: browser.runtime.getURL("welcome.html") });
+    }
+});
+
 browser.contextMenus.create({
     id: "send-to-multistreamvlc",
     title: "Send to MultiStreamVlc",
