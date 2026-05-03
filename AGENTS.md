@@ -48,7 +48,22 @@ No extra NuGet packages needed for companion listener — `System.Net.HttpListen
 
 ## browser-extensions/
 
-Contains Firefox extensions. NOT part of the .NET build. Do not modify `M3U8-Sniffer/` — archival only. `MultiStreamVlc-Companion/` is the active extension that sends streams to the app's HTTP listener.
+Contains Firefox and Chromium extensions. NOT part of the .NET build.
+
+- **M3U8-Sniffer/** — Archived. DO NOT MODIFY.
+- **MultiStreamVlc-Companion/firefox/** — Active Firefox extension (Manifest V3). Sends detected .m3u8 URLs to the app's HTTP listener. Uses `browser.*` namespace.
+- **MultiStreamVlc-Companion/chromium/** — Active Chromium extension (Manifest V3). Same as Firefox with: `service_worker` background, `chrome.*` namespace, `chrome.scripting.executeScript` instead of `tabs.executeScript`, PNG icons instead of SVG. UI files are symlinks to `../firefox/`.
+- **MultiStreamVlc-Companion/firefox/background.js** and **chromium/background.js** are the only files that differ in logic. All other JS/CSS/HTML is shared via symlinks.
+
+Shared JS files have a polyfill line at top: `if (typeof browser === "undefined") globalThis.browser = chrome;` for Chromium compatibility.
+
+To regenerate Chromium PNG icons from SVG:
+```bash
+rsvg-convert -w 16 -h 16 firefox/icon.svg -o chromium/icon-16.png
+rsvg-convert -w 32 -h 32 firefox/icon.svg -o chromium/icon-32.png
+rsvg-convert -w 48 -h 48 firefox/icon.svg -o chromium/icon-48.png
+rsvg-convert -w 128 -h 128 firefox/icon.svg -o chromium/icon-128.png
+```
 
 ## Conventions
 

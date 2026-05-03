@@ -19,13 +19,11 @@ MultiStreamVlc is a cross-platform desktop application built with **Avalonia 12*
 - **URL Editing**: Change any stream's URL on the fly.
 - **Cross-Platform**: Runs on Linux and Windows (via Avalonia 12 / .NET 8.0).
 
-## M3U8 Sniffer
+## Browser Extensions
 
-M3U8 Sniffer is a Firefox extension that allows you to capture .m3u8 URLs from a right click button or keyboard shortcut (Ctrl+Shift+L) and shows history in a toolbar popup. ([Link to Firefox Addon Marketplace](https://addons.mozilla.org/en-US/firefox/addon/m3u8-sniffer/))
+**MultiStreamVlc Companion** — Detects .m3u8 stream URLs and sends them directly to the app via the companion listener. Right-click any page → "Send to MultiStreamVlc" (`Ctrl+Shift+S`). Available for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/multistreamvlc-companion/) and Chromium. See [`browser-extensions/README.md`](browser-extensions/README.md) for full details.
 
-![M3U8 Sniffer Right Click](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/m3u8_rightClick.png?raw=true)
-
-![M3U8 Sniffer History](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/m3u8_history.png?raw=true)
+**M3U8 Sniffer** — Archived predecessor. Captures .m3u8 URLs to clipboard via right-click (`Ctrl+Shift+L`). Does not send to the desktop app. ([Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/m3u8-sniffer/))
 
 ## Prerequisites
 

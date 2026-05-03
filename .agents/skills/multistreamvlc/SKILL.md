@@ -1,6 +1,6 @@
 ---
 name: multistreamvlc
-description: Project-specific skill for MultiStreamVlc — a cross-platform Avalonia 12 + LibVLCSharp desktop app that plays multiple HLS/m3u8 streams in floating windows or a 2x3 grid, with a companion HTTP listener for the Firefox extension. Activate when working on any file in this repository.
+description: Project-specific skill for MultiStreamVlc — a cross-platform Avalonia 12 + LibVLCSharp desktop app that plays multiple HLS/m3u8 streams in floating windows or a 2x3 grid, with a companion HTTP listener for browser extensions (Firefox + Chromium). Activate when working on any file in this repository.
 ---
 
 # MultiStreamVlc — Project Skill
@@ -26,11 +26,12 @@ description: Project-specific skill for MultiStreamVlc — a cross-platform Aval
 | `StreamEntry.cs` | Data model (`INotifyPropertyChanged`): Id, Title, Url, Player, FloatWindow, GridSlot, GridSlotIndex, Status. Titles auto-renumber on deletion. |
 | `AppSettings.cs` | Settings model (Host, Port). Load/save to `settings.json` in app base directory. `RandomPort()` generates ports in 49152-65535 range. |
 | `SettingsWindow.axaml(.cs)` | Modal dialog for companion listener config. Host, Port, Randomize button, Copy Port button, OK/Cancel. |
-| `CompanionListener.cs` | Background `HttpListener`. POST `{"name","url"}` endpoint. Validates URL, dispatches to UI thread via `Dispatcher.UIThread.Invoke()`. Returns JSON `{"status":"ok"}` or `{"error":"..."}`. |
+| `CompanionListener.cs` | Background `HttpListener`. POST `{"name","url"}` endpoint. Validates URL, dispatches to UI thread via `Dispatcher.UIThread.Invoke()`. Returns JSON `{"status":"ok"}` or `{"error":"..."}`. Also accepts `{"test":true}` for connection tests. |
 | `ChangeUrlDialog.axaml(.cs)` | Modal to change a stream's URL |
 | `ErrorDialog.axaml(.cs)` | Simple error popup (Avalonia has no MessageBox) |
 | `browser-extensions/M3U8-Sniffer/` | Archived Firefox extension — DO NOT MODIFY |
-| `browser-extensions/MultiStreamVlc-Companion/` | Active Firefox extension that sends streams to the HTTP listener |
+| `browser-extensions/MultiStreamVlc-Companion/firefox/` | Active Firefox extension (Manifest V3). `browser.*` namespace. SVG icon. Background script. |
+| `browser-extensions/MultiStreamVlc-Companion/chromium/` | Active Chromium extension (Manifest V3). `chrome.*` namespace. PNG icons. Service worker. UI files symlinked to `../firefox/`. |
 
 ## Architecture
 
@@ -57,6 +58,33 @@ Content-Type: application/json
 - `200 {"status":"ok"}` — stream added to dashboard (no auto-play)
 - `400 {"error":"..."}` — invalid JSON or unsupported URL
 - `405` — non-POST methods
+
+Test connection (used by extension to verify listener is running):
+```
+POST http://{host}:{port}/
+Content-Type: application/json
+
+{"test": true}
+```
+
+- `200 {"status":"ok"}` — listener is running
+
+## Browser Extension Differences
+
+The Companion extension has two variants sharing most code via symlinks:
+
+| | Firefox | Chromium |
+|---|---|---|
+| Manifest | `"scripts": ["background.js"]` | `"service_worker": "background.js"` |
+| Namespace | `browser.*` | `chrome.*` |
+| Clipboard | `browser.scripting.executeScript` | `chrome.scripting.executeScript` |
+| Icons | SVG | PNG (16/32/48/128) |
+| Permissions | No `scripting` needed | Requires `scripting` |
+| Min Firefox | 140.0 (for `data_collection_permissions`) | N/A |
+
+Shared JS files (`popup.js`, `options.js`, `welcome.js`) have polyfill: `if (typeof browser === "undefined") globalThis.browser = chrome;`
+
+Only `manifest.json` and `background.js` differ between browsers.
 
 ## Critical Patterns (do not break these)
 
