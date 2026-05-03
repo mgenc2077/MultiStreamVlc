@@ -112,19 +112,19 @@ async function saveAndSend(tab) {
 
 async function copyToClipboardInTab(tabId, text) {
     try {
-        await browser.tabs.executeScript(tabId, {
-            code: `(async () => {
-                try {
-                    await navigator.clipboard.writeText(${JSON.stringify(text)});
-                } catch {
+        await browser.scripting.executeScript({
+            target: { tabId },
+            func: (t) => {
+                navigator.clipboard.writeText(t).catch(() => {
                     const ta = document.createElement('textarea');
-                    ta.value = ${JSON.stringify(text)};
+                    ta.value = t;
                     document.body.appendChild(ta);
                     ta.select();
                     document.execCommand('copy');
                     ta.remove();
-                }
-            })();`
+                });
+            },
+            args: [text]
         });
         return true;
     } catch {
