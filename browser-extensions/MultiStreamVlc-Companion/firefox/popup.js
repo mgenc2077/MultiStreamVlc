@@ -1,3 +1,5 @@
+if (typeof browser === "undefined") globalThis.browser = chrome;
+
 const statusEl = document.getElementById("status");
 const statusDot = document.getElementById("status-dot");
 const statusEndpoint = document.getElementById("status-endpoint");

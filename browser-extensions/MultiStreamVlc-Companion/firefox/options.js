@@ -1,3 +1,5 @@
+if (typeof browser === "undefined") globalThis.browser = chrome;
+
 const hostInput = document.getElementById("host");
 const portInput = document.getElementById("port");
 const btnTest = document.getElementById("btn-test");
@@ -27,11 +29,11 @@ async function loadSettings() {
 }
 
 btnTest.addEventListener("click", async () => {
-    const host = hostInput.value.trim();
+    const host = hostInput.value.trim() || "localhost";
     const port = parseInt(portInput.value, 10);
 
-    if (!host || !port) {
-        setStatus("Enter host and port first.", "status-err");
+    if (!port) {
+        setStatus("Enter a port number.", "status-err");
         return;
     }
 
@@ -51,7 +53,7 @@ btnTest.addEventListener("click", async () => {
 });
 
 btnSave.addEventListener("click", async () => {
-    const host = hostInput.value.trim();
+    const host = hostInput.value.trim() || "localhost";
     const port = parseInt(portInput.value, 10);
 
     if (!host || !port || port < 1 || port > 65535) {
