@@ -1,0 +1,64 @@
+{
+    "manifest_version": 3,
+    "name": "MultiStreamVlc Companion",
+    "version": "1.0",
+    "description": "Detects .m3u8 stream URLs and sends them to the MultiStreamVlc desktop app.",
+
+    "permissions": [
+        "webRequest",
+        "tabs",
+        "activeTab",
+        "storage",
+        "scripting",
+        "contextMenus",
+        "notifications"
+    ],
+
+    "host_permissions": [
+        "<all_urls>"
+    ],
+
+    "background": {
+        "scripts": ["background.js"]
+    },
+
+    "action": {
+        "default_title": "MultiStreamVlc Companion",
+        "default_popup": "popup.html",
+        "default_icon": "icon.svg"
+    },
+
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+
+    "web_accessible_resources": [{
+        "resources": ["welcome.html", "welcome.js", "icon.svg"],
+        "matches": ["<all_urls>"]
+    }],
+
+    "commands": {
+        "send-to-multistreamvlc": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+S"
+            },
+            "description": "Send last .m3u8 to MultiStreamVlc"
+        }
+    },
+
+    "icons": {
+        "48": "icon.svg",
+        "96": "icon.svg"
+    },
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "multistreamvlc-companion@multistreamvlc.local",
+            "strict_min_version": "140.0",
+            "data_collection_permissions": {
+                "required": ["none"]
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MultiStreamVlc.SettingsWindow"
+        Title="Companion Settings"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        Background="#FF1A1A1A">
+
+    <StackPanel Margin="16" Spacing="12" MinWidth="380">
+        <TextBlock Text="Companion HTTP Listener" FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,0,0,4"/>
+        <TextBlock Text="The Firefox extension sends streams to this address." Foreground="#FFAAAAAA" FontSize="12" TextWrapping="Wrap"/>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Host" Foreground="#FFCCCCCC" FontSize="13"/>
+            <TextBox x:Name="HostText" Width="340" Text="localhost"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Port" Foreground="#FFCCCCCC" FontSize="13"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBox x:Name="PortText" Width="200"/>
+                <Button Content="Randomize" Click="Randomize_Click"/>
+                <Button Content="Copy Port" Click="CopyPort_Click"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Border Height="1" Background="#FF333333" Margin="0,4"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Cancel" Width="90" Click="Cancel_Click"/>
+            <Button Content="OK" Width="90" Click="Ok_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

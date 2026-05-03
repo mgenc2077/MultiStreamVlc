@@ -13,18 +13,17 @@ MultiStreamVlc is a cross-platform desktop application built with **Avalonia 12*
 - **Grid View**: 2x3 grid displaying up to 6 pinned streams simultaneously.
 - **Grid Slot Selector**: Assign streams to specific grid slots (1-6) via dropdown — freely mix and match which streams appear in the grid.
 - **Quick-Create From Clipboard**: Instantly create a new stream from a URL copied to your clipboard.
-- **Granular Audio Control**: Individual volume sliders for each floating window.
+- **Companion Listener**: Built-in HTTP server receives streams from the MultiStreamVlc-Companion Firefox extension automatically.
+- **Granular Audio Control**: Individual volume sliders on the dashboard and in each floating window.
 - **Independent Playback**: Play, Stop, and Reconnect each stream independently.
 - **URL Editing**: Change any stream's URL on the fly.
 - **Cross-Platform**: Runs on Linux and Windows (via Avalonia 12 / .NET 8.0).
 
-## M3U8 Sniffer
+## Browser Extensions
 
-M3U8 Sniffer is a Firefox extension that allows you to capture .m3u8 URLs from a right click button or keyboard shortcut (Ctrl+Shift+L) and shows history in a toolbar popup. ([Link to Firefox Addon Marketplace](https://addons.mozilla.org/en-US/firefox/addon/m3u8-sniffer/))
+**MultiStreamVlc Companion** — Detects .m3u8 stream URLs and sends them directly to the app via the companion listener. Right-click any page → "Send to MultiStreamVlc" (`Ctrl+Shift+S`). Available for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/multistreamvlc-companion/) and Chromium. See [`browser-extensions/README.md`](browser-extensions/README.md) for full details.
 
-![M3U8 Sniffer Right Click](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/m3u8_rightClick.png?raw=true)
-
-![M3U8 Sniffer History](https://github.com/mgenc2077/MultiStreamVlc/blob/main/screenshots/m3u8_history.png?raw=true)
+**M3U8 Sniffer** — Archived predecessor. Captures .m3u8 URLs to clipboard via right-click (`Ctrl+Shift+L`). Does not send to the desktop app. ([Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/m3u8-sniffer/))
 
 ## Prerequisites
 
@@ -69,8 +68,27 @@ On Wayland systems, the app runs under XWayland for video embedding compatibilit
 - **Grid Slot Selector**: Each stream has a "Grid:" dropdown. Select a slot number (1-6) to pin the stream to that grid position, or select "—" to unpin. The grid window opens automatically when the first stream is pinned.
 - **Floating Windows**: Click "Float" to pop out a stream into its own window. If the stream was in the grid, it is automatically unpinned.
 - **Change URL**: Click "URL" for a popup to update the stream URL.
-- **Volume**: Use the slider in each floating window to adjust volume.
+- **Volume**: Use the volume slider on each dashboard row or in each floating window.
 - **Reconnecting**: If a stream stalls or disconnects, click "Reconnect".
+- **Companion Listener**: Click "Settings" to configure the HTTP listener (host and port). The companion Firefox extension sends stream URLs to this endpoint.
+
+## Companion API
+
+The app listens for POST requests from the MultiStreamVlc-Companion Firefox extension.
+
+**Endpoint**: `POST http://{host}:{port}/`
+
+**Request**:
+```json
+{"name": "Stream Name", "url": "https://example.com/stream.m3u8"}
+```
+
+**Responses**:
+- `200` — `{"status":"ok"}` — Stream added to dashboard
+- `400` — `{"error":"..."}` — Invalid JSON or unsupported URL
+- `405` — Method not allowed (non-POST)
+
+Configure host and port via the Settings button on the dashboard. Port defaults to a random number in the 49152-65535 range.
 
 ## Tech Stack
 
@@ -78,3 +96,4 @@ On Wayland systems, the app runs under XWayland for video embedding compatibilit
 - **Avalonia 12** — cross-platform UI framework
 - **LibVLCSharp 3.9** — VLC media player bindings
 - **LibVLCSharp.Avalonia** — `VideoView` control for embedding VLC video in Avalonia
+- **System.Net.HttpListener** — built-in HTTP server for companion extension

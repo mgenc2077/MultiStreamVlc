@@ -23,6 +23,7 @@
                 Click="ClipboardStream_Click"
             />
             <Button Content="Launch Grid View" Click="LaunchGrid_Click" />
+            <Button Content="Settings" Click="Settings_Click" />
         </StackPanel>
 
         <ListBox x:Name="StreamList" Background="#FF1A1A1A">

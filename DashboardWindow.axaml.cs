@@ -17,6 +17,8 @@ public partial class DashboardWindow : Window
     private LibVLC? _libVlc;
     private readonly ObservableCollection<StreamEntry> _streams = new();
     private MainWindow? _gridWindow;
+    private CompanionListener? _companionListener;
+    private AppSettings _settings;
     private int _nextIndex = 1;
 
     public DashboardWindow()
@@ -44,6 +46,9 @@ public partial class DashboardWindow : Window
         }
 
         _libVlc = new LibVLC(vlcArgs.ToArray());
+
+        _settings = AppSettings.Load();
+        StartCompanionListener();
 
         StreamList.ItemsSource = _streams;
         Closed += OnClosed;
@@ -315,6 +320,40 @@ public partial class DashboardWindow : Window
         _streams.Add(entry);
     }
 
+    private async void Settings_Click(object? sender, RoutedEventArgs e)
+    {
+        var dlg = new SettingsWindow(_settings.Host, _settings.Port);
+        await dlg.ShowDialog(this);
+        if (!dlg.IsOk) return;
+
+        _settings.Host = dlg.Host;
+        _settings.Port = dlg.Port;
+        _settings.Save();
+
+        StartCompanionListener();
+    }
+
+    private void StartCompanionListener()
+    {
+        _companionListener?.Stop();
+        _companionListener = new CompanionListener(OnCompanionStreamReceived);
+        _companionListener.Start(_settings.Host, _settings.Port);
+    }
+
+    private bool OnCompanionStreamReceived(string name, string url)
+    {
+        if (!IsValidUrl(url)) return false;
+
+        var entry = new StreamEntry
+        {
+            Index = _nextIndex++,
+            Title = name,
+            Url = url
+        };
+        _streams.Add(entry);
+        return true;
+    }
+
     private bool IsValidUrl(string url)
     {
         if (string.IsNullOrWhiteSpace(url)) return false;
@@ -348,6 +387,8 @@ public partial class DashboardWindow : Window
 
     private void OnClosed(object? sender, EventArgs e)
     {
+        _companionListener?.Stop();
+
         foreach (var entry in _streams)
         {
             try
